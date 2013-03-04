@@ -2,4 +2,10 @@ Authors ordered by first contribution.
 
 SungMin Ha (ishtar, zen.isis@gmail.com)
 Hyuk Hur (http://hyukhur.tumblr.com)
+
 Cliff Rowley (cliffrowley@gmail.com)
+  - Missing return value in formatInOriginalFormat:regionCallingFrom:error
+  - Compatibility with iOS versions prior to 6.x
+
+Aaron Wojnowski (aaronwojnowski@gmail.com)
+  - Remove extra r from the countryCodeFromRegionCode method name.
