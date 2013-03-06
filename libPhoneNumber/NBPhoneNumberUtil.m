@@ -32,15 +32,12 @@ NSString *UNKNOWN_REGION_ = @"ZZ";
 NSString *COLOMBIA_MOBILE_TO_FIXED_LINE_PREFIX_ = @"3";
 NSString *PLUS_SIGN = @"+";
 NSString *STAR_SIGN_ = @"*";
-NSString *PLUS_CHARS_ = @"+＋";
 NSString *RFC3966_EXTN_PREFIX_ = @";ext=";
 NSString *RFC3966_PREFIX_ = @"tel:";
 NSString *RFC3966_PHONE_CONTEXT_ = @";phone-context=";
 NSString *RFC3966_ISDN_SUBADDRESS_ = @";isub=";
 NSString *DEFAULT_EXTN_PREFIX_ = @" ext. ";
-NSString *REGION_CODE_FOR_NON_GEO_ENTITY = @"001";
 NSString *VALID_ALPHA_ = @"A-Za-z";
-NSString *VALID_DIGITS_ = @"0-9０-９٠-٩۰-۹";
 
 #pragma mark - Static regular expression strings -
 NSString *NON_DIGITS_PATTERN_ = @"\\D+";
@@ -66,7 +63,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 @property (nonatomic, strong, readonly) NSRegularExpression *PLUS_CHARS_PATTERN, *CAPTURING_DIGIT_PATTERN, *VALID_ALPHA_PHONE_PATTERN_;
 @property (nonatomic, strong, readonly) NSString *LEADING_PLUS_CHARS_PATTERN_, *EXTN_PATTERN_, *SEPARATOR_PATTERN_, *VALID_PHONE_NUMBER_PATTERN_, *VALID_START_CHAR_PATTERN_, *UNWANTED_END_CHAR_PATTERN_, *SECOND_NUMBER_START_PATTERN_;
 
-@property (nonatomic, strong, readonly) NSDictionary *ALPHA_MAPPINGS_, *ALL_NORMALIZATION_MAPPINGS_, *DIGIT_MAPPINGS, *DIALLABLE_CHAR_MAPPINGS_, *ALL_PLUS_NUMBER_GROUPING_SYMBOLS_;
+@property (nonatomic, strong, readonly) NSDictionary *ALPHA_MAPPINGS_, *ALL_NORMALIZATION_MAPPINGS_, *DIALLABLE_CHAR_MAPPINGS_, *ALL_PLUS_NUMBER_GROUPING_SYMBOLS_;
 
 @property (nonatomic, strong, readwrite) NSMutableDictionary *mapCCode2CN;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *mapCN2CCode;
@@ -241,7 +238,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 
 - (NSArray*)matchedStringByRegex:(NSString*)sourceString regex:(NSString*)pattern
 {
-    NSArray *matches = [self matchedStringByRegex:sourceString regex:pattern];
+    NSArray *matches = [self matchesByRegex:sourceString regex:pattern];
     NSMutableArray *matchString = [[NSMutableArray alloc] init];
     
     for (NSTextCheckingResult *match in matches)
@@ -479,26 +476,29 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 - (void)initRegularExpressionSet
 {
     _VALID_PUNCTUATION = @"-x‐-―−ー－-／  ­​⁠　()（）［］.\\[\\]/~⁓∼～*";
+    _VALID_DIGITS_STRING = @"0-9０-９٠-٩۰-۹";
+    _PLUS_CHARS_ = @"+＋";
+    _REGION_CODE_FOR_NON_GEO_ENTITY = @"001";
     
     NSString *EXTN_PATTERNS_FOR_PARSING_ = @"(?:;ext=([0-9０-９٠-٩۰-۹]{1,7})|[  \\t,]*(?:e?xt(?:ensi(?:ó?|ó))?n?|ｅ?ｘｔｎ?|[,xｘX#＃~～]|int|anexo|ｉｎｔ)[:\\.．]?[  \\t,-]*([0-9０-９٠-٩۰-۹]{1,7})#?|[- ]+([0-9０-９٠-٩۰-۹]{1,5})#)$";
     
     NSError *error = nil;
     
     _PLUS_CHARS_PATTERN =
-        [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"[%@]+", PLUS_CHARS_] options:0 error:&error];
+        [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"[%@]+", _PLUS_CHARS_] options:0 error:&error];
     
-    _LEADING_PLUS_CHARS_PATTERN_ = [NSString stringWithFormat:@"^[%@]+", PLUS_CHARS_];
+    _LEADING_PLUS_CHARS_PATTERN_ = [NSString stringWithFormat:@"^[%@]+", _PLUS_CHARS_];
     
     _CAPTURING_DIGIT_PATTERN =
-        [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"([%@])", VALID_DIGITS_] options:0 error:&error];
+        [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"([%@])", _VALID_DIGITS_STRING] options:0 error:&error];
     
-    _VALID_START_CHAR_PATTERN_ = [NSString stringWithFormat:@"[%@%@]", PLUS_CHARS_, VALID_DIGITS_];
+    _VALID_START_CHAR_PATTERN_ = [NSString stringWithFormat:@"[%@%@]", _PLUS_CHARS_, _VALID_DIGITS_STRING];
     
     _SECOND_NUMBER_START_PATTERN_ = @"[\\\\\\/] *x";
     
     _VALID_ALPHA_PHONE_PATTERN_ = [NSRegularExpression regularExpressionWithPattern:VALID_ALPHA_PHONE_PATTERN_STRING options:0 error:&error];
     
-    _UNWANTED_END_CHAR_PATTERN_ = [NSString stringWithFormat:@"[^%@%@#]+$", VALID_DIGITS_, VALID_ALPHA_];
+    _UNWANTED_END_CHAR_PATTERN_ = [NSString stringWithFormat:@"[^%@%@#]+$", _VALID_DIGITS_STRING, VALID_ALPHA_];
     
     _EXTN_PATTERN_ = [NSString stringWithFormat:@"(?:%@)$", EXTN_PATTERNS_FOR_PARSING_];
 
@@ -1418,7 +1418,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
  */
 - (NBPhoneMetaData*)getMetadataForRegionOrCallingCode:(UInt32)countryCallingCode regionCode:(NSString*)regionCode
 {
-    return [REGION_CODE_FOR_NON_GEO_ENTITY isEqualToString:regionCode] ?
+    return [_REGION_CODE_FOR_NON_GEO_ENTITY isEqualToString:regionCode] ?
         [self getMetadataForNonGeographicalRegion:countryCallingCode] : [self getMetadataForRegion:regionCode];
 }
 
@@ -2601,7 +2601,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     UInt32 countryCode = number.countryCode;
     NBPhoneMetaData *metadata = [self getMetadataForRegionOrCallingCode:countryCode regionCode:regionCode];
     if (metadata == nil ||
-        ([REGION_CODE_FOR_NON_GEO_ENTITY isEqualToString:regionCode] == NO &&
+        ([_REGION_CODE_FOR_NON_GEO_ENTITY isEqualToString:regionCode] == NO &&
          countryCode != [self getCountryCodeForValidRegion:regionCode]))
     {
         // Either the region code was invalid, or the country calling code for this

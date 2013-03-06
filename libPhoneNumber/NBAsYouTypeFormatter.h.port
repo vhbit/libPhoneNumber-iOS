@@ -10,4 +10,11 @@
 
 @interface NBAsYouTypeFormatter : NSObject
 
+- (id)initWithRegionCode:(NSString*)regionCode;
+
+- (NSString*)inputDigit:(NSString*)nextChar;
+- (NSString*)inputDigitAndRememberPosition:(NSString*)nextChar;
+- (int)getRememberedPosition;
+- (void)clear;
+
 @end

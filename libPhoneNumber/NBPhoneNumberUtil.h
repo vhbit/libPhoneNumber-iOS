@@ -15,6 +15,13 @@
 + (NBPhoneNumberUtil*)sharedInstance;
 + (NBPhoneNumberUtil*)sharedInstanceForTest;
 
+// regular expressions
+- (NSArray*)matchesByRegex:(NSString*)sourceString regex:(NSString*)pattern;
+- (NSArray*)matchedStringByRegex:(NSString*)sourceString regex:(NSString*)pattern;
+- (NSString*)replaceStringByRegex:(NSString*)sourceString regex:(NSString*)pattern withTemplate:(NSString*)templateString;
+- (int)stringPositionByRegex:(NSString*)sourceString regex:(NSString*)pattern;
+
+
 + (NSString*)stringByTrimming:(NSString*)aString;
 
 //- (NSString*)numbersOnly:(NSString*)phoneNumber;
@@ -92,5 +99,9 @@
 - (BOOL)formattingRuleHasFirstGroupOnly:(NSString*)nationalPrefixFormattingRule;
 
 @property (nonatomic, strong, readonly) NSString *VALID_PUNCTUATION;
+@property (nonatomic, strong, readonly) NSString *VALID_DIGITS_STRING;
+@property (nonatomic, strong, readonly) NSString *PLUS_CHARS_;
+@property (nonatomic, strong, readonly) NSString *REGION_CODE_FOR_NON_GEO_ENTITY;
+@property (nonatomic, strong, readonly) NSDictionary *DIGIT_MAPPINGS;
 
 @end
