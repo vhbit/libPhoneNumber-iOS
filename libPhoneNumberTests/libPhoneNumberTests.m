@@ -849,6 +849,15 @@
 
     #pragma mark - testFormatNumberForMobileDialing
     {
+        // Numbers are normally dialed in national format in-country, and
+        // international format from outside the country.
+        STAssertEqualObjects(@"030123456", [phoneUtil formatNumberForMobileDialing:DE_NUMBER regionCallingFrom:@"DE" withFormatting:NO], nil);
+        STAssertEqualObjects(@"+4930123456", [phoneUtil formatNumberForMobileDialing:DE_NUMBER regionCallingFrom:@"CH" withFormatting:NO], nil);
+        id deNumberWithExtn = [DE_NUMBER copy];
+        [deNumberWithExtn setExtension:@"1234"];
+        STAssertEqualObjects(@"030123456", [phoneUtil formatNumberForMobileDialing:deNumberWithExtn regionCallingFrom:@"DE" withFormatting:NO], nil);
+        STAssertEqualObjects(@"+4930123456", [phoneUtil formatNumberForMobileDialing:deNumberWithExtn regionCallingFrom:@"CH" withFormatting:NO], nil);
+        
         // US toll free numbers are marked as noInternationalDialling in the test
         // metadata for testing purposes.
         STAssertEqualObjects(@"800 253 0000", [phoneUtil formatNumberForMobileDialing:US_TOLLFREE regionCallingFrom:@"US" withFormatting:YES], nil);
@@ -873,8 +882,20 @@
         STAssertEqualObjects(@"*2345", [phoneUtil formatNumberForMobileDialing:JP_STAR_NUMBER regionCallingFrom:@"JP" withFormatting:YES], nil);
         STAssertEqualObjects(@"+80012345678", [phoneUtil formatNumberForMobileDialing:INTERNATIONAL_TOLL_FREE regionCallingFrom:@"JP" withFormatting:NO], nil);
         STAssertEqualObjects(@"+800 1234 5678", [phoneUtil formatNumberForMobileDialing:INTERNATIONAL_TOLL_FREE regionCallingFrom:@"JP" withFormatting:YES], nil);
+        
+        // UAE numbers beginning with 600 (classified as UAN) need to be dialled
+        // without +971 locally.
         STAssertEqualObjects(@"+971600123456", [phoneUtil formatNumberForMobileDialing:AE_UAN regionCallingFrom:@"JP" withFormatting:NO], nil);
         STAssertEqualObjects(@"600123456", [phoneUtil formatNumberForMobileDialing:AE_UAN regionCallingFrom:@"AE" withFormatting:NO], nil);
+        STAssertEqualObjects(@"+523312345678",
+                             [phoneUtil formatNumberForMobileDialing:MX_NUMBER1 regionCallingFrom:@"MX" withFormatting:NO], nil);
+        STAssertEqualObjects(@"+523312345678",
+                             [phoneUtil formatNumberForMobileDialing:MX_NUMBER1 regionCallingFrom:@"US" withFormatting:NO], nil);
+        
+        // Non-geographical numbers should always be dialed in international format.
+        STAssertEqualObjects(@"+80012345678", [phoneUtil formatNumberForMobileDialing:INTERNATIONAL_TOLL_FREE regionCallingFrom:@"US" withFormatting:NO], nil);
+        STAssertEqualObjects(@"+80012345678", [phoneUtil formatNumberForMobileDialing:INTERNATIONAL_TOLL_FREE regionCallingFrom:@"UN001" withFormatting:NO], nil);
+
     }
 
     

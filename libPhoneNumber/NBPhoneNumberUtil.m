@@ -1500,6 +1500,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     return res;
 }
 
+
 - (NSString*)formatNumberForMobileDialing:(NBPhoneNumber*)number regionCallingFrom:(NSString*)regionCallingFrom withFormatting:(BOOL)withFormatting
 {
     UInt32 countryCallingCode = number.countryCode;
@@ -1508,56 +1509,60 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         return [self hasValue:number.rawInput] ? number.rawInput : @"";
     }
     
-    NSString *formattedNumber = nil;
+    NSString *formattedNumber = @"";
     // Clear the extension, as that part cannot normally be dialed together with
     // the main number.
     NBPhoneNumber *numberNoExt = [number copy];
     numberNoExt.extension = @"";
-    NBEPhoneNumberType numberType = [self getNumberType:numberNoExt];
 
     NSString *regionCode = [self getRegionCodeForCountryCode:countryCallingCode];
-    if ([regionCode isEqualToString:@"CO"] && [regionCallingFrom isEqualToString:@"CO"])
+    if ([regionCallingFrom isEqualToString:regionCode])
     {
-        if (numberType == NBEPhoneNumberTypeFIXED_LINE)
+        NBEPhoneNumberType numberType = [self getNumberType:numberNoExt];
+        BOOL isFixedLineOrMobile = (numberType == NBEPhoneNumberTypeFIXED_LINE) || (numberType == NBEPhoneNumberTypeMOBILE) || (numberType == NBEPhoneNumberTypeFIXED_LINE_OR_MOBILE);
+        // Carrier codes may be needed in some countries. We handle this here.
+        if ([regionCode isEqualToString:@"CO"] && numberType == NBEPhoneNumberTypeFIXED_LINE)
         {
             formattedNumber = [self formatNationalNumberWithCarrierCode:numberNoExt
                                                             carrierCode:COLOMBIA_MOBILE_TO_FIXED_LINE_PREFIX_];
         }
+        else if ([regionCode isEqualToString:@"BR"] && isFixedLineOrMobile)
+        {
+            formattedNumber = [self hasValue:numberNoExt.preferredDomesticCarrierCode] ?
+                [self formatNationalNumberWithPreferredCarrierCode:numberNoExt fallbackCarrierCode:@""] : @"";
+            // Brazilian fixed line and mobile numbers need to be dialed with a
+            // carrier code when called within Brazil. Without that, most of the
+            // carriers won't connect the call. Because of that, we return an
+            // empty string here.
+        }
         else
         {
-            // E164 doesn't work at all when dialing within Colombia.
-            formattedNumber = [self format:numberNoExt numberFormat:NBEPhoneNumberFormatNATIONAL];
+            // For NANPA countries, non-geographical countries, and Mexican fixed
+            // line and mobile numbers, we output international format for numbersi
+            // that can be dialed internationally as that always works.
+            if ((countryCallingCode == NANPA_COUNTRY_CODE_ ||
+                 [regionCode isEqualToString:_REGION_CODE_FOR_NON_GEO_ENTITY] ||
+                 // MX fixed line and mobile numbers should always be formatted in
+                 // international format, even when dialed within MX. For national
+                 // format to work, a carrier code needs to be used, and the correct
+                 // carrier code depends on if the caller and callee are from the
+                 // same local area. It is trickier to get that to work correctly than
+                 // using international format, which is tested to work fine on all
+                 // carriers.
+                 ([regionCode isEqualToString:@"MX"] && isFixedLineOrMobile)) && [self canBeInternationallyDialled:numberNoExt])
+            {
+                formattedNumber = [self format:numberNoExt numberFormat:NBEPhoneNumberFormatINTERNATIONAL];
+            }
+            else
+            {
+                formattedNumber = [self format:numberNoExt numberFormat:NBEPhoneNumberFormatNATIONAL];
+            }
         }
-    }
-    else if ([regionCode isEqualToString:@"PE"] && [regionCallingFrom isEqualToString:@"PE"])
-    {
-        // In Peru, numbers cannot be dialled using E164 format from a mobile phone
-        // for Movistar. Instead they must be dialled in national format.
-        formattedNumber = [self format:numberNoExt numberFormat:NBEPhoneNumberFormatNATIONAL];
-    }
-    else if ([regionCode isEqualToString:@"AE"] && [regionCallingFrom isEqualToString:@"AE"] && (numberType == NBEPhoneNumberTypeUAN))
-    {
-        // In the United Arab Emirates, numbers with the prefix 600 (UAN numbers)
-        // cannot be dialled using E164 format. Instead they must be dialled in
-        // national format.
-        formattedNumber = [self format:numberNoExt numberFormat:NBEPhoneNumberFormatNATIONAL];
-    }
-    else if ([regionCode isEqualToString:@"BR"] && [regionCallingFrom isEqualToString:@"BR"] &&
-               ((numberType == NBEPhoneNumberTypeFIXED_LINE) || (numberType == NBEPhoneNumberTypeMOBILE) || (numberType == NBEPhoneNumberTypeFIXED_LINE_OR_MOBILE)))
-    {
-        formattedNumber = [self hasValue:numberNoExt.preferredDomesticCarrierCode] ? [self formatNationalNumberWithPreferredCarrierCode:numberNoExt fallbackCarrierCode:@""] : @"";
-        // Brazilian fixed line and mobile numbers need to be dialed with a
-        // carrier code when called within Brazil. Without that, most of the
-        // carriers won't connect the call. Because of that, we return an empty
-        // string here.
     }
     else if ([self canBeInternationallyDialled:numberNoExt])
     {
-        return withFormatting ? [self format:numberNoExt numberFormat:NBEPhoneNumberFormatINTERNATIONAL] : [self format:numberNoExt numberFormat:NBEPhoneNumberFormatE164];
-    }
-    else
-    {
-        formattedNumber = [regionCallingFrom isEqualToString:regionCode] ? [self format:numberNoExt numberFormat:NBEPhoneNumberFormatNATIONAL] : @"";
+        return withFormatting ? [self format:numberNoExt numberFormat:NBEPhoneNumberFormatINTERNATIONAL] :
+            [self format:numberNoExt numberFormat:NBEPhoneNumberFormatE164];
     }
     
     return withFormatting ?
