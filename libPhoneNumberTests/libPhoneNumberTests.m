@@ -86,6 +86,22 @@
 }
 
 
+- (void)testAustriaNationalNumberParsing
+{
+    NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
+    NSString *internationalNumberForInput = @"436606545646";
+    NSString *nationalNumberForExpect = @"6606545646";
+    NSString *defaultRegion = @"AT";
+    
+    
+    NBPhoneNumber *phoneNumber = [phoneUtil parse:internationalNumberForInput defaultRegion:defaultRegion error:nil];
+    NSString *nationalNumberForActual = [NSString stringWithFormat:@"%llu", phoneNumber.nationalNumber];
+    
+    
+    STAssertEqualObjects(nationalNumberForExpect, nationalNumberForActual, nil);
+}
+
+
 - (void)testNSDictionaryalbeKey
 {
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
