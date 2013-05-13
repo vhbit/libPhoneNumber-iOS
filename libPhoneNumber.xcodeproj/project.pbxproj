@@ -83,6 +83,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4D43EF831740825100C24FF3 /* libPhoneNumber-iOS.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libPhoneNumber-iOS.podspec"; sourceTree = SOURCE_ROOT; };
 		FD0BD7761679DDA600B19065 /* NBPhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumber.h; sourceTree = "<group>"; };
 		FD0BD7771679DDA600B19065 /* NBPhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumber.m; sourceTree = "<group>"; };
 		FD2014DC169A8A82003491D9 /* index.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = index.php; sourceTree = "<group>"; };
@@ -227,6 +228,7 @@
 		FD7A0626167715A0004BBEB6 /* libPhoneNumber */ = {
 			isa = PBXGroup;
 			children = (
+				4D43EF831740825100C24FF3 /* libPhoneNumber-iOS.podspec */,
 				FD7A062F167715A0004BBEB6 /* AppDelegate.h */,
 				FD7A0630167715A0004BBEB6 /* AppDelegate.m */,
 				FD0F11AD169AC2AB008DF508 /* Classes */,
