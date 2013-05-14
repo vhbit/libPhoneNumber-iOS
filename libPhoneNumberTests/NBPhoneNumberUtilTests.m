@@ -1,11 +1,11 @@
 //
-//  libPhoneNumberTests.m
-//  libPhoneNumberTests
+//  NBPhoneNumberUtilTests.m
+//  NBPhoneNumberUtilTests
 //
 //  Created by NHN Corp. Last Edited by BAND dev team (band_dev@nhn.com)
 //
 
-#import "libPhoneNumberTests.h"
+#import "NBPhoneNumberUtilTests.h"
 
 #import "NBPhoneMetaData.h"
 #import "NBPhoneNumber.h"
@@ -46,7 +46,7 @@
 @end
 
 
-@implementation libPhoneNumberTests
+@implementation NBPhoneNumberUtilTests
 
 - (void)setUp
 {
@@ -98,7 +98,7 @@
     NBPhoneNumber *phoneNumber = [phoneUtil parse:internationalNumberForInput defaultRegion:defaultRegion error:nil];
     NSString *nationalNumberForActual = [NSString stringWithFormat:@"%llu", phoneNumber.nationalNumber];
     
-    
+    // ALWAYS FAIL need fix "google libPhoneNumber"
     STAssertEqualObjects(nationalNumberForExpect, nationalNumberForActual, nil);
 }
 

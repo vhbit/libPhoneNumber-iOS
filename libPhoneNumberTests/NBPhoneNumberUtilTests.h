@@ -1,12 +1,12 @@
 //
-//  libPhoneNumberTests.h
-//  libPhoneNumberTests
+//  NBPhoneNumberUtilTests.h
+//  NBPhoneNumberUtilTests
 //
 //  Created by NHN Corp. Last Edited by BAND dev team (band_dev@nhn.com)
 //
 
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface libPhoneNumberTests : SenTestCase
+@interface NBPhoneNumberUtilTests : SenTestCase
 
 @end
