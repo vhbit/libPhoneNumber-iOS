@@ -1,4 +1,4 @@
-# libPhoneNumber for iOS
+# libPhoneNumber for iOS (ARC)
 
 * NBPhoneNumber, NBNumberFormat, NBPhoneNumberDesc, NBPhoneMetaData (Metadata classes) 
 
