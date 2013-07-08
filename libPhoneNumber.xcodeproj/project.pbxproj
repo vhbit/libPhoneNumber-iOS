@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F04BE90176F062500076CB4 /* NBAsYouTypeFormatterTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FD57B66C16E5B71F000772AF /* NBAsYouTypeFormatterTest.m */; };
+		8FE047B5174389F300CCA610 /* NBAsYouTypeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = FD4C786916DB62AC00473849 /* NBAsYouTypeFormatter.m */; };
 		FD0BD7781679DDA700B19065 /* NBPhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = FD0BD7771679DDA600B19065 /* NBPhoneNumber.m */; };
 		FD7A0621167715A0004BBEB6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7A0620167715A0004BBEB6 /* UIKit.framework */; };
 		FD7A0623167715A0004BBEB6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7A0622167715A0004BBEB6 /* Foundation.framework */; };
@@ -88,10 +90,10 @@
 		FD0BD7771679DDA600B19065 /* NBPhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumber.m; sourceTree = "<group>"; };
 		FD2014DC169A8A82003491D9 /* index.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = index.php; sourceTree = "<group>"; };
 		FD2014DD169A8A82003491D9 /* libPhoneNumberGenerator.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = libPhoneNumberGenerator.php; sourceTree = "<group>"; };
-		FD4C786816DB62AC00473849 /* NBAsYouTypeFormatter.h.port */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NBAsYouTypeFormatter.h.port; sourceTree = "<group>"; };
-		FD4C786916DB62AC00473849 /* NBAsYouTypeFormatter.m.port */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NBAsYouTypeFormatter.m.port; sourceTree = "<group>"; };
-		FD57B66B16E5B71F000772AF /* AsYouTypeFormatterTest.h.port */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AsYouTypeFormatterTest.h.port; sourceTree = "<group>"; };
-		FD57B66C16E5B71F000772AF /* AsYouTypeFormatterTest.m.port */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AsYouTypeFormatterTest.m.port; sourceTree = "<group>"; };
+		FD4C786816DB62AC00473849 /* NBAsYouTypeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBAsYouTypeFormatter.h; sourceTree = "<group>"; };
+		FD4C786916DB62AC00473849 /* NBAsYouTypeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBAsYouTypeFormatter.m; sourceTree = "<group>"; };
+		FD57B66B16E5B71F000772AF /* NBAsYouTypeFormatterTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBAsYouTypeFormatterTest.h; sourceTree = "<group>"; };
+		FD57B66C16E5B71F000772AF /* NBAsYouTypeFormatterTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBAsYouTypeFormatterTest.m; sourceTree = "<group>"; };
 		FD7A061C167715A0004BBEB6 /* libPhoneNumber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = libPhoneNumber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD7A0620167715A0004BBEB6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FD7A0622167715A0004BBEB6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -166,8 +168,8 @@
 		FD0F11AD169AC2AB008DF508 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				FD4C786816DB62AC00473849 /* NBAsYouTypeFormatter.h.port */,
-				FD4C786916DB62AC00473849 /* NBAsYouTypeFormatter.m.port */,
+				FD4C786816DB62AC00473849 /* NBAsYouTypeFormatter.h */,
+				FD4C786916DB62AC00473849 /* NBAsYouTypeFormatter.m */,
 				FD7A065D167715FD004BBEB6 /* NBNumberFormat.h */,
 				FD7A065E167715FD004BBEB6 /* NBNumberFormat.m */,
 				FD7A066516771AFD004BBEB6 /* NBPhoneMetaData.h */,
@@ -260,8 +262,8 @@
 			children = (
 				FD7A064A167715A1004BBEB6 /* NBPhoneNumberUtilTests.h */,
 				FD7A064B167715A1004BBEB6 /* NBPhoneNumberUtilTests.m */,
-				FD57B66B16E5B71F000772AF /* AsYouTypeFormatterTest.h.port */,
-				FD57B66C16E5B71F000772AF /* AsYouTypeFormatterTest.m.port */,
+				FD57B66B16E5B71F000772AF /* NBAsYouTypeFormatterTest.h */,
+				FD57B66C16E5B71F000772AF /* NBAsYouTypeFormatterTest.m */,
 				FD7A0645167715A1004BBEB6 /* Supporting Files */,
 			);
 			name = "libPhoneNumber UnitTest";
@@ -454,6 +456,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F04BE90176F062500076CB4 /* NBAsYouTypeFormatterTest.m in Sources */,
+				8FE047B5174389F300CCA610 /* NBAsYouTypeFormatter.m in Sources */,
 				FD7A064C167715A1004BBEB6 /* NBPhoneNumberUtilTests.m in Sources */,
 				FD7A0658167715B2004BBEB6 /* NBPhoneNumberUtil.m in Sources */,
 				FD7A0660167715FD004BBEB6 /* NBNumberFormat.m in Sources */,

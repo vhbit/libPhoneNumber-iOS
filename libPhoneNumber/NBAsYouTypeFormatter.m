@@ -349,9 +349,11 @@
         if ([self createFormattingTemplate_:numberFormat ])
         {
             self.currentFormattingPattern_ = pattern;
-            NSTextCheckingResult *matchResult = [self.NATIONAL_PREFIX_SEPARATORS_PATTERN_ firstMatchInString:numberFormat.nationalPrefixFormattingRule
-                                                                                                     options:0
-                                                                                                       range:NSMakeRange(0, [numberFormat.nationalPrefixFormattingRule length])];
+            NSRange nationalPrefixRange = NSMakeRange(0, [numberFormat.nationalPrefixFormattingRule length]);
+            NSTextCheckingResult *matchResult =
+                [self.NATIONAL_PREFIX_SEPARATORS_PATTERN_ firstMatchInString:numberFormat.nationalPrefixFormattingRule
+                                                                     options:0
+                                                                       range:nationalPrefixRange];
             self.shouldAddSpaceAfterNationalPrefix_ = (matchResult != nil);
             // With a new formatting template, the matched position using the old
             // template needs to be reset.
@@ -467,11 +469,11 @@
     
     // Replace anything in the form of [..] with \d
     numberPattern = [self.CHARACTER_CLASS_PATTERN_ stringByReplacingMatchesInString:numberPattern options:0 range:NSMakeRange(0, [numberPattern length])
-                                                                      withTemplate:@"\\d"];
+                                                                      withTemplate:@"\\\\d"];
     
     // Replace any standalone digit (not the one in d{}) with \d
     numberPattern = [self.STANDALONE_DIGIT_PATTERN_ stringByReplacingMatchesInString:numberPattern options:0 range:NSMakeRange(0, [numberPattern length])
-                                                                       withTemplate:@"\\d"];
+                                                                       withTemplate:@"\\\\d"];
     self.formattingTemplate_ = [NSMutableString stringWithString:@""];
     
     /** @type {string} */

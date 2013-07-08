@@ -1112,8 +1112,8 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         hasFound = YES;
     }
-    
-    return hasFound;
+
+    return (([nationalPrefixFormattingRule length] <= 0) || hasFound);
 }
 
 
