@@ -281,7 +281,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         unichar oneChar = [sourceString characterAtIndex:i];
         NSString *keyString = [NSString stringWithCharacters:&oneChar length:1];
-        NSString *mappedValue = [dicMap valueForKey:keyString];
+        NSString *mappedValue = [dicMap objectForKey:keyString];
         if (mappedValue != nil)
         {
             [targetString appendString:mappedValue];
@@ -1078,7 +1078,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     for (int i = 0; i<numberLength; ++i)
     {
         character = [sourceString characterAtIndex:i];
-        newDigit = [normalizationReplacements valueForKey:[[NSString stringWithFormat: @"%C", character] uppercaseString]];
+        newDigit = [normalizationReplacements objectForKey:[[NSString stringWithFormat: @"%C", character] uppercaseString]];
         if (newDigit != nil)
         {
             [normalizedNumber appendString:newDigit];

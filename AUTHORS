@@ -9,3 +9,6 @@ Cliff Rowley (cliffrowley@gmail.com)
 
 Aaron Wojnowski (aaronwojnowski@gmail.com)
   - Remove extra r from the countryCodeFromRegionCode method name.
+  
+stonyw
+  - Handle char @ when normalize any strings, eg email
