@@ -30,7 +30,7 @@
     //testInvalidRegion()
     {
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCode:@"ZZ"];
+        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"ZZ"];
         STAssertEqualObjects(@"+", [f inputDigit:@"+"], nil);
         STAssertEqualObjects(@"+4", [f inputDigit:@"4"], nil);
         STAssertEqualObjects(@"+48 ", [f inputDigit:@"8"], nil);
