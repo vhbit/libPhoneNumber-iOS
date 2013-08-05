@@ -369,11 +369,15 @@
         {
             self.currentFormattingPattern_ = pattern;
             NSRange nationalPrefixRange = NSMakeRange(0, [numberFormat.nationalPrefixFormattingRule length]);
-            NSTextCheckingResult *matchResult =
-            [self.NATIONAL_PREFIX_SEPARATORS_PATTERN_ firstMatchInString:numberFormat.nationalPrefixFormattingRule
-                                                                 options:0
-                                                                   range:nationalPrefixRange];
-            self.shouldAddSpaceAfterNationalPrefix_ = (matchResult != nil);
+            if (nationalPrefixRange.length > 0) {
+                NSTextCheckingResult *matchResult =
+                [self.NATIONAL_PREFIX_SEPARATORS_PATTERN_ firstMatchInString:numberFormat.nationalPrefixFormattingRule
+                                                                     options:0
+                                                                       range:nationalPrefixRange];
+                self.shouldAddSpaceAfterNationalPrefix_ = (matchResult != nil);
+            } else {
+                self.shouldAddSpaceAfterNationalPrefix_ = NO;
+            }
             // With a new formatting template, the matched position using the old
             // template needs to be reset.
             self.lastMatchPosition_ = 0;
@@ -814,9 +818,13 @@
         BOOL isPatternRegExp = [[self.phoneUtil_ matchesByRegex:nationalNumber regex:patternRegExp] count] > 0;
         if (isPatternRegExp)
         {
-            NSArray *matches = [self.NATIONAL_PREFIX_SEPARATORS_PATTERN_ matchesInString:numberFormat.nationalPrefixFormattingRule options:0
-                                                                                   range:NSMakeRange(0, numberFormat.nationalPrefixFormattingRule.length)];
-            self.shouldAddSpaceAfterNationalPrefix_ = [matches count] > 0;
+            if (numberFormat.nationalPrefixFormattingRule.length > 0) {
+                NSArray *matches = [self.NATIONAL_PREFIX_SEPARATORS_PATTERN_ matchesInString:numberFormat.nationalPrefixFormattingRule options:0
+                                                                                       range:NSMakeRange(0, numberFormat.nationalPrefixFormattingRule.length)];
+                self.shouldAddSpaceAfterNationalPrefix_ = [matches count] > 0;
+            } else {
+                self.shouldAddSpaceAfterNationalPrefix_ = NO;
+            }
             
             /** @type {string} */
             NSString *formattedNumber = [self.phoneUtil_ replaceStringByRegex:nationalNumber regex:pattern withTemplate:numberFormat.format];
@@ -1140,7 +1148,10 @@
 {
     /** @type {string} */
     NSString *formattingTemplate = [self.formattingTemplate_ copy];
-    NSString *subedString = [formattingTemplate substringFromIndex:self.lastMatchPosition_];
+    NSString *subedString = @"";
+    if (formattingTemplate.length > self.lastMatchPosition_) {
+     subedString = [formattingTemplate substringFromIndex:self.lastMatchPosition_];
+    }
     
     if ([self.phoneUtil_ stringPositionByRegex:subedString regex:self.DIGIT_PLACEHOLDER_] >= 0)
     {
