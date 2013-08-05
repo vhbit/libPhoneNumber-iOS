@@ -137,7 +137,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 
 - (int)stringPositionByRegex:(NSString*)sourceString regex:(NSString*)pattern
 {
-    if (![self hasValue:sourceString] || ![self hasValue:pattern]) {
+    if (sourceString == nil || sourceString.length <= 0 || pattern == nil || pattern.length <= 0) {
         return -1;
     }
     
