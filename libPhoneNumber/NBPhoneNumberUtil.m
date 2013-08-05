@@ -58,7 +58,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
  - Country Number (CN)  = Country code for i18n calling
  - Country Code   (CC) : ISO country codes (2 chars)
  Ref. site (countrycode.org)
-*/
+ */
 @property (nonatomic, strong, readonly) NSDictionary *coreMetaData;
 @property (nonatomic, strong, readonly) NSRegularExpression *PLUS_CHARS_PATTERN, *CAPTURING_DIGIT_PATTERN, *VALID_ALPHA_PHONE_PATTERN_;
 @property (nonatomic, strong, readonly) NSString *LEADING_PLUS_CHARS_PATTERN_, *EXTN_PATTERN_, *SEPARATOR_PATTERN_, *VALID_PHONE_NUMBER_PATTERN_, *VALID_START_CHAR_PATTERN_, *UNWANTED_END_CHAR_PATTERN_, *SECOND_NUMBER_START_PATTERN_;
@@ -130,7 +130,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 {
     NSString *replacedString = [self replaceStringByRegex:sourceString regex:pattern withTemplate:@"<SEP>"];
     NSMutableArray *resArray = [[replacedString componentsSeparatedByString:@"<SEP>"] mutableCopy];
-    [resArray removeObject:@""];    
+    [resArray removeObject:@""];
     return resArray;
 }
 
@@ -199,7 +199,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     if ([matches count] == 1)
     {
         NSRange replaceRange = [currentPattern rangeOfFirstMatchInString:sourceString options:0 range:NSMakeRange(0, sourceString.length)];
-
+        
         if (replaceRange.location != NSNotFound)
         {
             replacementResult = [currentPattern stringByReplacingMatchesInString:[sourceString mutableCopy] options:0
@@ -309,26 +309,26 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 }
 
 /*
-- (NSString*)numbersOnly:(NSString*)phoneNumber
-{
-    NSMutableString *strippedString = [NSMutableString stringWithCapacity:phoneNumber.length];
-    
-    NSScanner *scanner = [NSScanner scannerWithString:phoneNumber];
-    NSCharacterSet *numbers = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
-    
-    while ([scanner isAtEnd] == NO) {
-        NSString *buffer;
-        if ([scanner scanCharactersFromSet:numbers intoString:&buffer]) {
-            [strippedString appendString:buffer];
-            
-        } else {
-            [scanner setScanLocation:([scanner scanLocation] + 1)];
-        }
-    }
-    
-    return strippedString;
-}
-*/
+ - (NSString*)numbersOnly:(NSString*)phoneNumber
+ {
+ NSMutableString *strippedString = [NSMutableString stringWithCapacity:phoneNumber.length];
+ 
+ NSScanner *scanner = [NSScanner scannerWithString:phoneNumber];
+ NSCharacterSet *numbers = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+ 
+ while ([scanner isAtEnd] == NO) {
+ NSString *buffer;
+ if ([scanner scanCharactersFromSet:numbers intoString:&buffer]) {
+ [strippedString appendString:buffer];
+ 
+ } else {
+ [scanner setScanLocation:([scanner scanLocation] + 1)];
+ }
+ }
+ 
+ return strippedString;
+ }
+ */
 
 
 - (NSString*)getNationalSignificantNumber:(NBPhoneNumber*)phoneNumber
@@ -390,7 +390,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         NSDictionary *resData = [self loadMetadata:@"NBPhoneNumberMetadata"];
         _coreMetaData = [resData objectForKey:@"countryToMetadata"];
         _mapCN2CCode = [resData objectForKey:@"countryCodeToRegionCodeMap"];
-
+        
         [self initCC2CN];
     }
     
@@ -429,57 +429,57 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     @catch (NSException *exception) {
         return unarchiveData;
     }
-
+    
     return unarchiveData;
 }
 
 /*
-- (NSDictionary*)generateMetadata:(id)metaClass
-{
-    NSMutableDictionary *resMedata = [[NSMutableDictionary alloc] init];
-    NSDictionary *srcMedata = nil;
-    
-    if ([metaClass isKindOfClass:[NBPhoneNumberMetadataForTesting class]])
-    {
-        srcMedata = ((NBPhoneNumberMetadataForTesting*)metaClass).metadata;
-    }
-    else if ([metaClass isKindOfClass:[NBPhoneNumberMetadata class]])
-    {
-        srcMedata = ((NBPhoneNumberMetadata*)metaClass).metadata;
-    }
-    else
-    {
-        return resMedata;
-    }
-    
-    NSDictionary *countryCodeToRegionCodeMap = [srcMedata objectForKey:@"countryCodeToRegionCodeMap"];
-    NSDictionary *countryToMetadata = [srcMedata objectForKey:@"countryToMetadata"];
-    NSLog(@"- countryCodeToRegionCodeMap count [%d]", [countryCodeToRegionCodeMap count]);
-    NSLog(@"- countryToMetadata          count [%d]", [countryToMetadata count]);
-    
-    NSMutableDictionary *genetatedMetaData = [[NSMutableDictionary alloc] init];
-    
-    for (id key in [countryToMetadata allKeys])
-    {
-        id metaData = [countryToMetadata objectForKey:key];
-        
-        NBPhoneMetaData *newMetaData = [[NBPhoneMetaData alloc] init];
-        [newMetaData buildData:metaData];
-        
-        [genetatedMetaData setObject:newMetaData forKey:key];
-    }
-    
-    [resMedata setObject:countryCodeToRegionCodeMap forKey:@"countryCodeToRegionCodeMap"];
-    [resMedata setObject:genetatedMetaData forKey:@"countryToMetadata"];
-    
-    return resMedata;
-}
-*/
+ - (NSDictionary*)generateMetadata:(id)metaClass
+ {
+ NSMutableDictionary *resMedata = [[NSMutableDictionary alloc] init];
+ NSDictionary *srcMedata = nil;
+ 
+ if ([metaClass isKindOfClass:[NBPhoneNumberMetadataForTesting class]])
+ {
+ srcMedata = ((NBPhoneNumberMetadataForTesting*)metaClass).metadata;
+ }
+ else if ([metaClass isKindOfClass:[NBPhoneNumberMetadata class]])
+ {
+ srcMedata = ((NBPhoneNumberMetadata*)metaClass).metadata;
+ }
+ else
+ {
+ return resMedata;
+ }
+ 
+ NSDictionary *countryCodeToRegionCodeMap = [srcMedata objectForKey:@"countryCodeToRegionCodeMap"];
+ NSDictionary *countryToMetadata = [srcMedata objectForKey:@"countryToMetadata"];
+ NSLog(@"- countryCodeToRegionCodeMap count [%d]", [countryCodeToRegionCodeMap count]);
+ NSLog(@"- countryToMetadata          count [%d]", [countryToMetadata count]);
+ 
+ NSMutableDictionary *genetatedMetaData = [[NSMutableDictionary alloc] init];
+ 
+ for (id key in [countryToMetadata allKeys])
+ {
+ id metaData = [countryToMetadata objectForKey:key];
+ 
+ NBPhoneMetaData *newMetaData = [[NBPhoneMetaData alloc] init];
+ [newMetaData buildData:metaData];
+ 
+ [genetatedMetaData setObject:newMetaData forKey:key];
+ }
+ 
+ [resMedata setObject:countryCodeToRegionCodeMap forKey:@"countryCodeToRegionCodeMap"];
+ [resMedata setObject:genetatedMetaData forKey:@"countryToMetadata"];
+ 
+ return resMedata;
+ }
+ */
 
 
 - (void)initRegularExpressionSet
 {
-    _VALID_PUNCTUATION = @"-x‐-―−ー－-／  ­​⁠　()（）［］.\\[\\]/~⁓∼～*";
+    _VALID_PUNCTUATION = @"-x\u2010-\u2015\u2212\u30FC\uFF0D-\uFF0F \u00A0\u00AD\u200B\u2060\u3000()\uFF08\uFF09\uFF3B\uFF3D.\\[\\]/~\u2053\u223C\uFF5E";
     _VALID_DIGITS_STRING = @"0-9０-９٠-٩۰-۹";
     _PLUS_CHARS_ = @"+＋";
     _REGION_CODE_FOR_NON_GEO_ENTITY = @"001";
@@ -489,12 +489,12 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     NSError *error = nil;
     
     _PLUS_CHARS_PATTERN =
-        [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"[%@]+", _PLUS_CHARS_] options:0 error:&error];
+    [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"[%@]+", _PLUS_CHARS_] options:0 error:&error];
     
     _LEADING_PLUS_CHARS_PATTERN_ = [NSString stringWithFormat:@"^[%@]+", _PLUS_CHARS_];
     
     _CAPTURING_DIGIT_PATTERN =
-        [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"([%@])", _VALID_DIGITS_STRING] options:0 error:&error];
+    [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"([%@])", _VALID_DIGITS_STRING] options:0 error:&error];
     
     _VALID_START_CHAR_PATTERN_ = [NSString stringWithFormat:@"[%@%@]", _PLUS_CHARS_, _VALID_DIGITS_STRING];
     
@@ -505,7 +505,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     _UNWANTED_END_CHAR_PATTERN_ = [NSString stringWithFormat:@"[^%@%@#]+$", _VALID_DIGITS_STRING, VALID_ALPHA_];
     
     _EXTN_PATTERN_ = [NSString stringWithFormat:@"(?:%@)$", EXTN_PATTERNS_FOR_PARSING_];
-
+    
     
     _SEPARATOR_PATTERN_ = [NSString stringWithFormat:@"[%@]+", _VALID_PUNCTUATION];
     
@@ -581,7 +581,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
                                           @"O", @"o", @"P", @"p", @"Q", @"q", @"R", @"r", @"S", @"s", @"T", @"t", @"U", @"u", @"V", @"v", @"W", @"w", @"X", @"x",
                                           @"Y", @"y", @"Z", @"z", @"-", @"-", @"-", @"\uFF0D", @"-", @"\u2010", @"-", @"\u2011", @"-", @"\u2012", @"-", @"\u2013", @"-", @"\u2014", @"-", @"\u2015",
                                           @"-", @"\u2212", @"/", @"/", @"/", @"\uFF0F", @" ", @" ", @" ", @"\u3000", @" ", @"\u2060", @".", @".", @".", @"\uFF0E", nil];
-
+    
 }
 
 
@@ -626,43 +626,43 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 }
 
 /*
-- (void)initCN2CC
-{
-    [self clearCN2CC];
-    _mapCN2CCode = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                    @[@"US", @"AG", @"AI", @"AS", @"BB", @"BM", @"BS", @"CA", @"DM", @"DO", @"GD", @"GU", @"JM", @"KN", @"KY", @"LC", @"MP", @"MS", @"PR", @"SX", @"TC", @"TT", @"VC", @"VG", @"VI"], @"1", @[@"RU", @"KZ"], @"7",
-                    @[@"EG"], @"20", @[@"ZA"], @"27",
-                    @[@"GR"], @"30", @[@"NL"], @"31", @[@"BE"], @"32", @[@"FR"], @"33", @[@"ES"], @"34", @[@"HU"], @"36", @[@"IT"], @"39",
-                    @[@"RO"], @"40", @[@"CH"], @"41", @[@"AT"], @"43", @[@"GB", @"GG", @"IM", @"JE"], @"44", @[@"DK"], @"45", @[@"SE"], @"46", @[@"NO", @"SJ"], @"47", @[@"PL"], @"48", @[@"DE"], @"49",
-                    @[@"PE"], @"51", @[@"MX"], @"52", @[@"CU"], @"53", @[@"AR"], @"54", @[@"BR"], @"55", @[@"CL"], @"56", @[@"CO"], @"57", @[@"VE"], @"58",
-                    @[@"MY"], @"60", @[@"AU", @"CC", @"CX"], @"61", @[@"ID"], @"62", @[@"PH"], @"63", @[@"NZ"], @"64", @[@"SG"], @"65", @[@"TH"], @"66",
-                    @[@"JP"], @"81", @[@"KR"], @"82", @[@"VN"], @"84", @[@"CN"], @"86",
-                    @[@"TR"], @"90", @[@"IN"], @"91", @[@"PK"], @"92", @[@"AF"], @"93", @[@"LK"], @"94", @[@"MM"], @"95", @[@"IR"], @"98",
-                    @[@"SS"], @"211", @[@"MA", @"EH"], @"212", @[@"DZ"], @"213", @[@"TN"], @"216", @[@"LY"], @"218",
-                    @[@"GM"], @"220", @[@"SN"], @"221", @[@"MR"], @"222", @[@"ML"], @"223", @[@"GN"], @"224", @[@"CI"], @"225", @[@"BF"], @"226", @[@"NE"], @"227", @[@"TG"], @"228", @[@"BJ"], @"229",
-                    @[@"MU"], @"230", @[@"LR"], @"231", @[@"SL"], @"232", @[@"GH"], @"233", @[@"NG"], @"234", @[@"TD"], @"235", @[@"CF"], @"236", @[@"CM"], @"237", @[@"CV"], @"238", @[@"ST"], @"239",
-                    @[@"GQ"], @"240", @[@"GA"], @"241", @[@"CG"], @"242", @[@"CD"], @"243", @[@"AO"], @"244", @[@"GW"], @"245", @[@"IO"], @"246", @[@"AC"], @"247", @[@"SC"], @"248", @[@"SD"], @"249",
-                    @[@"RW"], @"250", @[@"ET"], @"251", @[@"SO"], @"252", @[@"DJ"], @"253", @[@"KE"], @"254", @[@"TZ"], @"255", @[@"UG"], @"256", @[@"BI"], @"257", @[@"MZ"], @"258",
-                    @[@"ZM"], @"260", @[@"MG"], @"261", @[@"RE", @"YT"], @"262", @[@"ZW"], @"263", @[@"NA"], @"264", @[@"MW"], @"265", @[@"LS"], @"266", @[@"BW"], @"267", @[@"SZ"], @"268", @[@"KM"], @"269",
-                    @[@"SH"], @"290", @[@"ER"], @"291", @[@"AW"], @"297", @[@"FO"], @"298", @[@"GL"], @"299",
-                    @[@"GI"], @"350", @[@"PT"], @"351", @[@"LU"], @"352", @[@"IE"], @"353", @[@"IS"], @"354", @[@"AL"], @"355", @[@"MT"], @"356", @[@"CY"], @"357", @[@"FI", @"AX"], @"358", @[@"BG"], @"359",
-                    @[@"LT"], @"370", @[@"LV"], @"371", @[@"EE"], @"372", @[@"MD"], @"373", @[@"AM"], @"374", @[@"BY"], @"375", @[@"AD"], @"376", @[@"MC"], @"377", @[@"SM"], @"378", @[@"VA"], @"379",
-                    @[@"UA"], @"380", @[@"RS"], @"381", @[@"ME"], @"382", @[@"HR"], @"385", @[@"SI"], @"386", @[@"BA"], @"387", @[@"MK"], @"389",
-                    @[@"CZ"], @"420", @[@"SK"], @"421", @[@"LI"], @"423",
-                    @[@"FK"], @"500", @[@"BZ"], @"501", @[@"GT"], @"502", @[@"SV"], @"503", @[@"HN"], @"504", @[@"NI"], @"505", @[@"CR"], @"506", @[@"PA"], @"507", @[@"PM"], @"508", @[@"HT"], @"509",
-                    @[@"GP", @"BL", @"MF"], @"590", @[@"BO"], @"591", @[@"GY"], @"592", @[@"EC"], @"593", @[@"GF"], @"594", @[@"PY"], @"595", @[@"MQ"], @"596", @[@"SR"], @"597", @[@"UY"], @"598", @[@"CW", @"BQ"], @"599",
-                    @[@"TL"], @"670", @[@"NF"], @"672", @[@"BN"], @"673", @[@"NR"], @"674", @[@"PG"], @"675", @[@"TO"], @"676", @[@"SB"], @"677", @[@"VU"], @"678", @[@"FJ"], @"679",
-                    @[@"PW"], @"680", @[@"WF"], @"681", @[@"CK"], @"682", @[@"NU"], @"683", @[@"WS"], @"685", @[@"KI"], @"686", @[@"NC"], @"687", @[@"TV"], @"688", @[@"PF"], @"689",
-                    @[@"TK"], @"690", @[@"FM"], @"691", @[@"MH"], @"692",
-                    @[@"001"], @"800", @[@"001"], @"808",
-                    @[@"KP"], @"850", @[@"HK"], @"852", @[@"MO"], @"853", @[@"KH"], @"855", @[@"LA"], @"856",
-                    @[@"001"], @"870", @[@"001"], @"878",
-                    @[@"BD"], @"880", @[@"001"], @"881", @[@"001"], @"882", @[@"001"], @"883", @[@"TW"], @"886", @[@"001"], @"888",
-                    @[@"MV"], @"960", @[@"LB"], @"961", @[@"JO"], @"962", @[@"SY"], @"963", @[@"IQ"], @"964", @[@"KW"], @"965", @[@"SA"], @"966", @[@"YE"], @"967", @[@"OM"], @"968",
-                    @[@"PS"], @"970", @[@"AE"], @"971", @[@"IL"], @"972", @[@"BH"], @"973", @[@"QA"], @"974", @[@"BT"], @"975", @[@"MN"], @"976", @[@"NP"], @"977", @[@"001"], @"979",
-                    @[@"TJ"], @"992", @[@"TM"], @"993", @[@"AZ"], @"994", @[@"GE"], @"995", @[@"KG"], @"996", @[@"UZ"], @"998", nil];
-}
-*/
+ - (void)initCN2CC
+ {
+ [self clearCN2CC];
+ _mapCN2CCode = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+ @[@"US", @"AG", @"AI", @"AS", @"BB", @"BM", @"BS", @"CA", @"DM", @"DO", @"GD", @"GU", @"JM", @"KN", @"KY", @"LC", @"MP", @"MS", @"PR", @"SX", @"TC", @"TT", @"VC", @"VG", @"VI"], @"1", @[@"RU", @"KZ"], @"7",
+ @[@"EG"], @"20", @[@"ZA"], @"27",
+ @[@"GR"], @"30", @[@"NL"], @"31", @[@"BE"], @"32", @[@"FR"], @"33", @[@"ES"], @"34", @[@"HU"], @"36", @[@"IT"], @"39",
+ @[@"RO"], @"40", @[@"CH"], @"41", @[@"AT"], @"43", @[@"GB", @"GG", @"IM", @"JE"], @"44", @[@"DK"], @"45", @[@"SE"], @"46", @[@"NO", @"SJ"], @"47", @[@"PL"], @"48", @[@"DE"], @"49",
+ @[@"PE"], @"51", @[@"MX"], @"52", @[@"CU"], @"53", @[@"AR"], @"54", @[@"BR"], @"55", @[@"CL"], @"56", @[@"CO"], @"57", @[@"VE"], @"58",
+ @[@"MY"], @"60", @[@"AU", @"CC", @"CX"], @"61", @[@"ID"], @"62", @[@"PH"], @"63", @[@"NZ"], @"64", @[@"SG"], @"65", @[@"TH"], @"66",
+ @[@"JP"], @"81", @[@"KR"], @"82", @[@"VN"], @"84", @[@"CN"], @"86",
+ @[@"TR"], @"90", @[@"IN"], @"91", @[@"PK"], @"92", @[@"AF"], @"93", @[@"LK"], @"94", @[@"MM"], @"95", @[@"IR"], @"98",
+ @[@"SS"], @"211", @[@"MA", @"EH"], @"212", @[@"DZ"], @"213", @[@"TN"], @"216", @[@"LY"], @"218",
+ @[@"GM"], @"220", @[@"SN"], @"221", @[@"MR"], @"222", @[@"ML"], @"223", @[@"GN"], @"224", @[@"CI"], @"225", @[@"BF"], @"226", @[@"NE"], @"227", @[@"TG"], @"228", @[@"BJ"], @"229",
+ @[@"MU"], @"230", @[@"LR"], @"231", @[@"SL"], @"232", @[@"GH"], @"233", @[@"NG"], @"234", @[@"TD"], @"235", @[@"CF"], @"236", @[@"CM"], @"237", @[@"CV"], @"238", @[@"ST"], @"239",
+ @[@"GQ"], @"240", @[@"GA"], @"241", @[@"CG"], @"242", @[@"CD"], @"243", @[@"AO"], @"244", @[@"GW"], @"245", @[@"IO"], @"246", @[@"AC"], @"247", @[@"SC"], @"248", @[@"SD"], @"249",
+ @[@"RW"], @"250", @[@"ET"], @"251", @[@"SO"], @"252", @[@"DJ"], @"253", @[@"KE"], @"254", @[@"TZ"], @"255", @[@"UG"], @"256", @[@"BI"], @"257", @[@"MZ"], @"258",
+ @[@"ZM"], @"260", @[@"MG"], @"261", @[@"RE", @"YT"], @"262", @[@"ZW"], @"263", @[@"NA"], @"264", @[@"MW"], @"265", @[@"LS"], @"266", @[@"BW"], @"267", @[@"SZ"], @"268", @[@"KM"], @"269",
+ @[@"SH"], @"290", @[@"ER"], @"291", @[@"AW"], @"297", @[@"FO"], @"298", @[@"GL"], @"299",
+ @[@"GI"], @"350", @[@"PT"], @"351", @[@"LU"], @"352", @[@"IE"], @"353", @[@"IS"], @"354", @[@"AL"], @"355", @[@"MT"], @"356", @[@"CY"], @"357", @[@"FI", @"AX"], @"358", @[@"BG"], @"359",
+ @[@"LT"], @"370", @[@"LV"], @"371", @[@"EE"], @"372", @[@"MD"], @"373", @[@"AM"], @"374", @[@"BY"], @"375", @[@"AD"], @"376", @[@"MC"], @"377", @[@"SM"], @"378", @[@"VA"], @"379",
+ @[@"UA"], @"380", @[@"RS"], @"381", @[@"ME"], @"382", @[@"HR"], @"385", @[@"SI"], @"386", @[@"BA"], @"387", @[@"MK"], @"389",
+ @[@"CZ"], @"420", @[@"SK"], @"421", @[@"LI"], @"423",
+ @[@"FK"], @"500", @[@"BZ"], @"501", @[@"GT"], @"502", @[@"SV"], @"503", @[@"HN"], @"504", @[@"NI"], @"505", @[@"CR"], @"506", @[@"PA"], @"507", @[@"PM"], @"508", @[@"HT"], @"509",
+ @[@"GP", @"BL", @"MF"], @"590", @[@"BO"], @"591", @[@"GY"], @"592", @[@"EC"], @"593", @[@"GF"], @"594", @[@"PY"], @"595", @[@"MQ"], @"596", @[@"SR"], @"597", @[@"UY"], @"598", @[@"CW", @"BQ"], @"599",
+ @[@"TL"], @"670", @[@"NF"], @"672", @[@"BN"], @"673", @[@"NR"], @"674", @[@"PG"], @"675", @[@"TO"], @"676", @[@"SB"], @"677", @[@"VU"], @"678", @[@"FJ"], @"679",
+ @[@"PW"], @"680", @[@"WF"], @"681", @[@"CK"], @"682", @[@"NU"], @"683", @[@"WS"], @"685", @[@"KI"], @"686", @[@"NC"], @"687", @[@"TV"], @"688", @[@"PF"], @"689",
+ @[@"TK"], @"690", @[@"FM"], @"691", @[@"MH"], @"692",
+ @[@"001"], @"800", @[@"001"], @"808",
+ @[@"KP"], @"850", @[@"HK"], @"852", @[@"MO"], @"853", @[@"KH"], @"855", @[@"LA"], @"856",
+ @[@"001"], @"870", @[@"001"], @"878",
+ @[@"BD"], @"880", @[@"001"], @"881", @[@"001"], @"882", @[@"001"], @"883", @[@"TW"], @"886", @[@"001"], @"888",
+ @[@"MV"], @"960", @[@"LB"], @"961", @[@"JO"], @"962", @[@"SY"], @"963", @[@"IQ"], @"964", @[@"KW"], @"965", @[@"SA"], @"966", @[@"YE"], @"967", @[@"OM"], @"968",
+ @[@"PS"], @"970", @[@"AE"], @"971", @[@"IL"], @"972", @[@"BH"], @"973", @[@"QA"], @"974", @[@"BT"], @"975", @[@"MN"], @"976", @[@"NP"], @"977", @[@"001"], @"979",
+ @[@"TJ"], @"992", @[@"TM"], @"993", @[@"AZ"], @"994", @[@"GE"], @"995", @[@"KG"], @"996", @[@"UZ"], @"998", nil];
+ }
+ */
 
 
 #pragma mark - Metadata manager (phonenumberutil.js) functions -
@@ -709,32 +709,32 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     return possibleNumber;
     
     /*
-    NSString *possibleNumber = @"";
-    NSRegularExpression *currentPattern = self.VALID_START_CHAR_PATTERN_;
-    int sourceLength = phoneNumber.length;
-    
-    NSArray *matches = [currentPattern matchesInString:phoneNumber options:0 range:NSMakeRange(0, sourceLength)];
-    if (matches && [matches count] > 0)
-    {
-        NSRange rangeOfFirstMatch = ((NSTextCheckingResult*)[matches objectAtIndex:0]).range;
-        possibleNumber = [phoneNumber substringFromIndex:rangeOfFirstMatch.location];
-        
-        // Remove trailing non-alpha non-numerical characters.
-        currentPattern = self.UNWANTED_END_CHAR_PATTERN_;
-        possibleNumber = [currentPattern stringByReplacingMatchesInString:possibleNumber options:0
-                                                                    range:NSMakeRange(0, [possibleNumber length]) withTemplate:@""];
-        // Check for extra numbers at the end.
-        currentPattern = self.SECOND_NUMBER_START_PATTERN_;
-        matches = [currentPattern matchesInString:possibleNumber options:0
-                                            range:NSMakeRange(0, [possibleNumber length])];
-        if (matches && [matches count] > 0)
-        {
-            NSRange rangeOfSecondMatch = ((NSTextCheckingResult*)[matches objectAtIndex:0]).range;
-            possibleNumber = [possibleNumber substringWithRange:NSMakeRange(0, rangeOfSecondMatch.location)];
-        }
-    }
-    
-    return possibleNumber;
+     NSString *possibleNumber = @"";
+     NSRegularExpression *currentPattern = self.VALID_START_CHAR_PATTERN_;
+     int sourceLength = phoneNumber.length;
+     
+     NSArray *matches = [currentPattern matchesInString:phoneNumber options:0 range:NSMakeRange(0, sourceLength)];
+     if (matches && [matches count] > 0)
+     {
+     NSRange rangeOfFirstMatch = ((NSTextCheckingResult*)[matches objectAtIndex:0]).range;
+     possibleNumber = [phoneNumber substringFromIndex:rangeOfFirstMatch.location];
+     
+     // Remove trailing non-alpha non-numerical characters.
+     currentPattern = self.UNWANTED_END_CHAR_PATTERN_;
+     possibleNumber = [currentPattern stringByReplacingMatchesInString:possibleNumber options:0
+     range:NSMakeRange(0, [possibleNumber length]) withTemplate:@""];
+     // Check for extra numbers at the end.
+     currentPattern = self.SECOND_NUMBER_START_PATTERN_;
+     matches = [currentPattern matchesInString:possibleNumber options:0
+     range:NSMakeRange(0, [possibleNumber length])];
+     if (matches && [matches count] > 0)
+     {
+     NSRange rangeOfSecondMatch = ((NSTextCheckingResult*)[matches objectAtIndex:0]).range;
+     possibleNumber = [possibleNumber substringWithRange:NSMakeRange(0, rangeOfSecondMatch.location)];
+     }
+     }
+     
+     return possibleNumber;
      */
 }
 
@@ -936,41 +936,41 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 
 
 /**
-* Gets the length of the national destination code (NDC) from the PhoneNumber
-* object passed in, so that clients could use it to split a national
-* significant number into NDC and subscriber number. The NDC of a phone number
-* is normally the first group of digit(s) right after the country calling code
-* when the number is formatted in the international format, if there is a
-* subscriber number part that follows. An example of how this could be used:
-*
-* <pre>
-* var phoneUtil = getInstance();
-* var number = phoneUtil.parse('18002530000', 'US');
-* var nationalSignificantNumber =
-*     phoneUtil.getNationalSignificantNumber(number);
-* var nationalDestinationCode;
-* var subscriberNumber;
-*
-* var nationalDestinationCodeLength =
-*     phoneUtil.getLengthOfNationalDestinationCode(number);
-* if (nationalDestinationCodeLength > 0) {
-    *   nationalDestinationCode =
-    *       nationalSignificantNumber.substring(0, nationalDestinationCodeLength);
-    *   subscriberNumber =
-    *       nationalSignificantNumber.substring(nationalDestinationCodeLength);
-    * } else {
-        *   nationalDestinationCode = '';
-        *   subscriberNumber = nationalSignificantNumber;
-        * }
-* </pre>
-*
-* Refer to the unittests to see the difference between this function and
-* {@link #getLengthOfGeographicalAreaCode}.
-*
-* @param {i18n.phonenumbers.PhoneNumber} number the PhoneNumber object for
-*     which clients want to know the length of the NDC.
-* @return {number} the length of NDC of the PhoneNumber object passed in.
-*/
+ * Gets the length of the national destination code (NDC) from the PhoneNumber
+ * object passed in, so that clients could use it to split a national
+ * significant number into NDC and subscriber number. The NDC of a phone number
+ * is normally the first group of digit(s) right after the country calling code
+ * when the number is formatted in the international format, if there is a
+ * subscriber number part that follows. An example of how this could be used:
+ *
+ * <pre>
+ * var phoneUtil = getInstance();
+ * var number = phoneUtil.parse('18002530000', 'US');
+ * var nationalSignificantNumber =
+ *     phoneUtil.getNationalSignificantNumber(number);
+ * var nationalDestinationCode;
+ * var subscriberNumber;
+ *
+ * var nationalDestinationCodeLength =
+ *     phoneUtil.getLengthOfNationalDestinationCode(number);
+ * if (nationalDestinationCodeLength > 0) {
+ *   nationalDestinationCode =
+ *       nationalSignificantNumber.substring(0, nationalDestinationCodeLength);
+ *   subscriberNumber =
+ *       nationalSignificantNumber.substring(nationalDestinationCodeLength);
+ * } else {
+ *   nationalDestinationCode = '';
+ *   subscriberNumber = nationalSignificantNumber;
+ * }
+ * </pre>
+ *
+ * Refer to the unittests to see the difference between this function and
+ * {@link #getLengthOfGeographicalAreaCode}.
+ *
+ * @param {i18n.phonenumbers.PhoneNumber} number the PhoneNumber object for
+ *     which clients want to know the length of the NDC.
+ * @return {number} the length of NDC of the PhoneNumber object passed in.
+ */
 - (int)getLengthOfNationalDestinationCode:(NBPhoneNumber*)phoneNumber error:(NSError **)error
 {
     int res = 0;
@@ -1112,7 +1112,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         hasFound = YES;
     }
-
+    
     return (([nationalPrefixFormattingRule length] <= 0) || hasFound);
 }
 
@@ -1315,7 +1315,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     // Metadata cannot be nil because the country calling code is valid
     /** @type {i18n.phonenumbers.PhoneMetadata} */
     NBPhoneMetaData *metadata = [self getMetadataForRegionOrCallingCode:countryCallingCode regionCode:regionCode];
-
+    
     NSString *formattedNumber = @"";
     NBNumberFormat *formattingPattern = [self chooseFormattingPatternForNumber:userDefinedFormats nationalNumber:nationalSignificantNumber];
     if (formattingPattern == nil)
@@ -1330,7 +1330,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         // for different numbers have the appropriate national prefix.
         NBNumberFormat *numFormatCopy = [formattingPattern copy];
         NSString *nationalPrefixFormattingRule = formattingPattern.nationalPrefixFormattingRule;
-
+        
         if (nationalPrefixFormattingRule.length > 0)
         {
             NSString *nationalPrefix = metadata.nationalPrefix;
@@ -1393,7 +1393,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 
 
 - (NSString*)formatNationalNumberWithCarrierCode:(NBPhoneNumber*)number carrierCode:(NSString*)carrierCode
-{    
+{
     UInt32 countryCallingCode = number.countryCode;
     NSString *nationalSignificantNumber = [self getNationalSignificantNumber:number];
     if ([self hasValidCountryCallingCode:countryCallingCode] == NO)
@@ -1423,7 +1423,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 - (NBPhoneMetaData*)getMetadataForRegionOrCallingCode:(UInt32)countryCallingCode regionCode:(NSString*)regionCode
 {
     return [_REGION_CODE_FOR_NON_GEO_ENTITY isEqualToString:regionCode] ?
-        [self getMetadataForNonGeographicalRegion:countryCallingCode] : [self getMetadataForRegion:regionCode];
+    [self getMetadataForNonGeographicalRegion:countryCallingCode] : [self getMetadataForRegion:regionCode];
 }
 
 
@@ -1514,7 +1514,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     // the main number.
     NBPhoneNumber *numberNoExt = [number copy];
     numberNoExt.extension = @"";
-
+    
     NSString *regionCode = [self getRegionCodeForCountryCode:countryCallingCode];
     if ([regionCallingFrom isEqualToString:regionCode])
     {
@@ -1529,7 +1529,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         else if ([regionCode isEqualToString:@"BR"] && isFixedLineOrMobile)
         {
             formattedNumber = [self hasValue:numberNoExt.preferredDomesticCarrierCode] ?
-                [self formatNationalNumberWithPreferredCarrierCode:numberNoExt fallbackCarrierCode:@""] : @"";
+            [self formatNationalNumberWithPreferredCarrierCode:numberNoExt fallbackCarrierCode:@""] : @"";
             // Brazilian fixed line and mobile numbers need to be dialed with a
             // carrier code when called within Brazil. Without that, most of the
             // carriers won't connect the call. Because of that, we return an
@@ -1562,11 +1562,11 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     else if ([self canBeInternationallyDialled:numberNoExt])
     {
         return withFormatting ? [self format:numberNoExt numberFormat:NBEPhoneNumberFormatINTERNATIONAL] :
-            [self format:numberNoExt numberFormat:NBEPhoneNumberFormatE164];
+        [self format:numberNoExt numberFormat:NBEPhoneNumberFormatE164];
     }
     
     return withFormatting ?
-        formattedNumber : [self normalizeHelper:formattedNumber normalizationReplacements:self.DIALLABLE_CHAR_MAPPINGS_ removeNonMatches:YES];
+    formattedNumber : [self normalizeHelper:formattedNumber normalizationReplacements:self.DIALLABLE_CHAR_MAPPINGS_ removeNonMatches:YES];
 }
 
 
@@ -1665,7 +1665,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     NSString *formattedNationalNumber = [self formatNsn:nationalSignificantNumber metadata:metadataForRegion
                                       phoneNumberFormat:NBEPhoneNumberFormatINTERNATIONAL carrierCode:nil];
     NSString *formattedExtension = [self maybeGetFormattedExtension:number metadata:metadataForRegion numberFormat:NBEPhoneNumberFormatINTERNATIONAL];
-
+    
     NSString *hasLenth = [NSString stringWithFormat:@"%@ %lu %@%@", internationalPrefixForFormatting, countryCallingCode, formattedNationalNumber, formattedExtension];
     NSString *hasNotLength = [self prefixNumberWithCountryCallingCode:countryCallingCode phoneNumberFormat:NBEPhoneNumberFormatINTERNATIONAL
                                               formattedNationalNumber:formattedNationalNumber formattedExtension:formattedExtension];
@@ -1673,7 +1673,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     return internationalPrefixForFormatting.length > 0 ? hasLenth:hasNotLength;
 }
 
-                                                                            
+
 /**
  * A helper function that is used by format and formatByPattern.
  *
@@ -1743,9 +1743,9 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 {
     if ([self hasValue:number.rawInput] && ([self hasUnexpectedItalianLeadingZero:number] || [self hasFormattingPatternForNumber:number] == NO))
     {
-            // We check if we have the formatting pattern because without that, we might
-            // format the number as a group without national prefix.
-            return number.rawInput;
+        // We check if we have the formatting pattern because without that, we might
+        // format the number as a group without national prefix.
+        return number.rawInput;
     }
     
     if (number.countryCodeSource == nil)
@@ -1839,7 +1839,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
             break;
         }
     }
-
+    
     NSString *rawInput = number.rawInput;
     // If no digit is inserted/removed/modified as a result of our formatting, we
     // return the formatted phone number; otherwise we return the raw input the
@@ -1849,7 +1849,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         NSString *normalizedFormattedNumber = [self normalizeHelper:formattedNumber normalizationReplacements:_DIALLABLE_CHAR_MAPPINGS_ removeNonMatches:YES];
         /** @type {string} */
         NSString *normalizedRawInput =[self normalizeHelper:rawInput normalizationReplacements:_DIALLABLE_CHAR_MAPPINGS_ removeNonMatches:YES];
-
+        
         if ([normalizedFormattedNumber isEqualToString:normalizedRawInput] == NO)
         {
             formattedNumber = rawInput;
@@ -1899,7 +1899,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
  * @private
  */
 - (BOOL)hasUnexpectedItalianLeadingZero:(NBPhoneNumber*)number
-{    
+{
     return number.italianLeadingZero && [self isLeadingZeroPossible:number.countryCode] == NO;
 }
 
@@ -1919,7 +1919,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         return NO;
     }
-
+    
     NSString *nationalNumber = [self getNationalSignificantNumber:number];
     NBNumberFormat *formatRule = [self chooseFormattingPatternForNumber:metadata.numberFormats nationalNumber:nationalNumber];
     return formatRule != nil;
@@ -1977,7 +1977,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         return [self formatOutOfCountryCallingNumber:number regionCallingFrom:regionCallingFrom];
     }
-
+    
     UInt32 countryCode = number.countryCode;
     if ([self hasValidCountryCallingCode:countryCode] == NO)
     {
@@ -2002,7 +2002,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
             rawInput = [rawInput substringFromIndex:firstNationalNumberDigit];
         }
     }
-
+    
     NBPhoneMetaData *metadataForRegionCallingFrom = [self getMetadataForRegion:regionCallingFrom];
     if (countryCode == NANPA_COUNTRY_CODE_)
     {
@@ -2014,13 +2014,13 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     else if (metadataForRegionCallingFrom != nil && countryCode == [self getCountryCodeForValidRegion:regionCallingFrom])
     {
         NBNumberFormat *formattingPattern = [self chooseFormattingPatternForNumber:metadataForRegionCallingFrom.numberFormats
-                                                                         nationalNumber:nationalNumber];
+                                                                    nationalNumber:nationalNumber];
         if (formattingPattern == nil)
         {
             // If no pattern above is matched, we format the original input.
             return rawInput;
         }
-
+        
         NBNumberFormat *newFormat = [formattingPattern copy];
         // The first group is the first group of digits that the user wrote
         // together.
@@ -2037,7 +2037,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         
         return [self formatNsnUsingPattern:rawInput formattingPattern:newFormat numberFormat:NBEPhoneNumberFormatNATIONAL carrierCode:nil];
     }
-
+    
     NSString *internationalPrefixForFormatting = @"";
     // If an unsupported region-calling-from is entered, or a country with
     // multiple international prefixes, the international format of the number is
@@ -2046,9 +2046,9 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         NSString *internationalPrefix = metadataForRegionCallingFrom.internationalPrefix;
         internationalPrefixForFormatting =
-            [self matchesEntirely:UNIQUE_INTERNATIONAL_PREFIX_ string:internationalPrefix] ? internationalPrefix : metadataForRegionCallingFrom.preferredInternationalPrefix;
+        [self matchesEntirely:UNIQUE_INTERNATIONAL_PREFIX_ string:internationalPrefix] ? internationalPrefix : metadataForRegionCallingFrom.preferredInternationalPrefix;
     }
-
+    
     NSString *regionCode = [self getRegionCodeForCountryCode:countryCode];
     // Metadata cannot be nil because the country calling code is valid.
     NBPhoneMetaData *metadataForRegion = [self getMetadataForRegionOrCallingCode:countryCode regionCode:regionCode];
@@ -2176,7 +2176,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         // Strip any leading punctuation.
         formattedNationalNumber = [self replaceStringByRegex:formattedNationalNumber regex:[NSString stringWithFormat:@"^%@", self.SEPARATOR_PATTERN_] withTemplate:@""];
-
+        
         // Replace the rest with a dash between each number group.
         formattedNationalNumber = [self replaceStringByRegex:formattedNationalNumber regex:self.SEPARATOR_PATTERN_ withTemplate:@"-"];
     }
@@ -2249,7 +2249,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         return nil;
     }
-
+    
     NBPhoneNumberDesc *desc = [self getNumberDescByType:[self getMetadataForRegion:regionCode] type:type];
     
     @try {
@@ -2421,7 +2421,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 - (NBEPhoneNumberType)getNumberTypeHelper:(NSString*)nationalNumber metadata:(NBPhoneMetaData*)metadata
 {
     NBPhoneNumberDesc *generalNumberDesc = metadata.generalDesc;
-
+    
     //NSLog(@"getNumberTypeHelper - UNKNOWN 1");
     if ([self hasValue:generalNumberDesc.nationalNumberPattern] == NO ||
         [self isNumberMatchingDesc:nationalNumber numberDesc:generalNumberDesc] == NO)
@@ -2429,7 +2429,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         //NSLog(@"getNumberTypeHelper - UNKNOWN 2");
         return NBEPhoneNumberTypeUNKNOWN;
     }
-
+    
     //NSLog(@"getNumberTypeHelper - PREMIUM_RATE 1");
     if ([self isNumberMatchingDesc:nationalNumber numberDesc:metadata.premiumRate])
     {
@@ -2564,7 +2564,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         return [self matchesEntirely:numberDesc.possibleNumberPattern string:nationalNumber];
     
     return [self matchesEntirely:numberDesc.possibleNumberPattern string:nationalNumber] &&
-        [self matchesEntirely:numberDesc.nationalNumberPattern string:nationalNumber];
+    [self matchesEntirely:numberDesc.nationalNumberPattern string:nationalNumber];
 }
 
 
@@ -2673,7 +2673,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
  * @param {Array.<string>} regionCodes
  * @return {?string}
  * @private
-
+ 
  */
 - (NSString*)getRegionCodeForNumberFromRegionList:(NBPhoneNumber*)phoneNumber regionCodes:(NSArray*)regionCodes
 {
@@ -2825,7 +2825,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         return nil;
     }
-
+    
     NSString *nationalPrefix = metadata.nationalPrefix;
     // If no national prefix was found, we return nil.
     if (nationalPrefix.length == 0)
@@ -2937,7 +2937,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 
 
 - (BOOL)isPossibleNumber:(NBPhoneNumber*)number
-{    
+{
     return [self isPossibleNumberWithReason:number] == NBEValidationResultIS_POSSIBLE;
 }
 
@@ -2960,7 +2960,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         return NBEValidationResultIS_POSSIBLE;
     }
-        
+    
     if ([self stringPositionByRegex:number regex:numberPattern] == 0)
     {
         return NBEValidationResultTOO_LONG;
@@ -3050,7 +3050,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
             return NBEValidationResultIS_POSSIBLE;
         }
     }
-
+    
     NSString *possibleNumberPattern = generalNumDesc.possibleNumberPattern;
     return [self testNumberLengthAgainstPattern:possibleNumberPattern number:nationalNumber];
 }
@@ -3132,12 +3132,12 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 
 
 - (BOOL)truncateTooLongNumber:(NBPhoneNumber*)number
-{    
+{
     if ([self isValidNumber:number])
     {
         return YES;
     }
-
+    
     NBPhoneNumber *numberCopy = [number copy];
     UInt64 nationalNumber = number.nationalNumber;
     do {
@@ -3172,7 +3172,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         // Country codes do not begin with a '0'.
         return 0;
     }
-
+    
     UInt32 potentialCountryCode = -1;
     int numberLength = fullNumber.length;
     
@@ -3300,7 +3300,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
                                            reason:[NSString stringWithFormat:@"TOO_SHORT_AFTER_IDD:%@", fullNumber]
                                          userInfo:nil];
         }
-
+        
         UInt32 potentialCountryCode = [self extractCountryCode:fullNumber nationalNumber:nationalNumber];
         
         if (potentialCountryCode != 0)
@@ -3328,11 +3328,11 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         {
             NSString *potentialNationalNumber = [normalizedNumber substringFromIndex:defaultCountryCodeString.length];
             NBPhoneNumberDesc *generalDesc = defaultRegionMetadata.generalDesc;
-
+            
             NSString *validNumberPattern = generalDesc.nationalNumberPattern;
             // Passing null since we don't need the carrier code.
             [self maybeStripNationalPrefixAndCarrierCode:&potentialNationalNumber metadata:defaultRegionMetadata carrierCode:nil];
-
+            
             NSString *potentialNationalNumberStr = [potentialNationalNumber copy];
             NSString *possibleNumberPattern = generalDesc.possibleNumberPattern;
             // If the number was not valid before but is valid now, or if it was too
@@ -3399,7 +3399,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
                 }
             }
         }
-
+        
         (*number) = [remainString copy];
         return YES;
     }
@@ -3461,7 +3461,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     // Attempt to parse the first digits as an international prefix.
     NSString *iddPattern = [possibleIddPrefix copy];
     [self normalizeSB:numberStr];
-
+    
     return [self parsePrefixAsIdd:iddPattern sourceString:numberStr] ? NBECountryCodeSourceFROM_NUMBER_WITH_IDD : NBECountryCodeSourceFROM_DEFAULT_COUNTRY;
 }
 
@@ -3551,7 +3551,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         if ([self hasValue:nationalNumberRule ] && [self matchesEntirely:nationalNumberRule string:numberStr] &&
             [self matchesEntirely:nationalNumberRule string:transformedNumber] == NO)
         {
-                return NO;
+            return NO;
         }
         
         if ((noTransform && numOfGroups > 0 && [self hasValue:firstMatchStringWithGroup]) || (!noTransform && numOfGroups > 1))
@@ -3613,12 +3613,12 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
                 NSString *tokenedString = [numberStr substringWithRange:NSMakeRange(0, mStart)];
                 (*number) = @"";
                 (*number) = [(*number) stringByAppendingString:tokenedString];
-
+                
                 return matchString;
             }
         }
     }
-
+    
     return @"";
 }
 
@@ -3638,7 +3638,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 {
     // If the number is nil or empty, we can't infer the region.
     return [self isValidRegionCode:defaultRegion] ||
-        (numberToParse != nil && numberToParse.length > 0 && [self isStartingStringByRegex:numberToParse regex:self.LEADING_PLUS_CHARS_PATTERN_]);
+    (numberToParse != nil && numberToParse.length > 0 && [self isStartingStringByRegex:numberToParse regex:self.LEADING_PLUS_CHARS_PATTERN_]);
 }
 
 
@@ -3734,7 +3734,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     }
     return [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:YES checkRegion:YES];
 }
-                 
+
 
 /**
  * Parses a string and returns it in proto buffer format. This method is the
@@ -3897,7 +3897,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     }
     
     NSString *normalizedNationalNumberStr = [normalizedNationalNumber copy];
-
+    
     int lengthOfNationalNumber = normalizedNationalNumberStr.length;
     if (lengthOfNationalNumber < MIN_LENGTH_FOR_NSN_)
     {
@@ -4138,7 +4138,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     {
         return NBEMatchTypeNO_MATCH;
     }
-
+    
     UInt32 firstNumberCountryCode = firstNumber.countryCode;
     UInt32 secondNumberCountryCode = secondNumber.countryCode;
     
@@ -4197,7 +4197,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
     
     // Note that endsWith returns NO if the numbers are equal.
     return [firstNumberNationalNumber hasSuffix:secondNumberNationalNumber] ||
-        [secondNumberNationalNumber hasSuffix:firstNumberNationalNumber];
+    [secondNumberNationalNumber hasSuffix:firstNumberNationalNumber];
 }
 
 
