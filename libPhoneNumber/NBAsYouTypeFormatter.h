@@ -11,6 +11,7 @@
 @interface NBAsYouTypeFormatter : NSObject
 
 - (id)initWithRegionCode:(NSString*)regionCode;
+- (id)initWithRegionCodeForTest:(NSString*)regionCode;
 
 - (NSString*)inputDigit:(NSString*)nextChar;
 - (NSString*)inputDigitAndRememberPosition:(NSString*)nextChar;
