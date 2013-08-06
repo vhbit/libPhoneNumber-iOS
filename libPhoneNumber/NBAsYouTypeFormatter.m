@@ -126,7 +126,7 @@
          * @type {RegExp}
          * @private
          */
-        self.STANDALONE_DIGIT_PATTERN_ = [NSRegularExpression regularExpressionWithPattern:@"\\d(?=[^,}][^,}])]" options:0 error:&error];
+        self.STANDALONE_DIGIT_PATTERN_ = [NSRegularExpression regularExpressionWithPattern:@"\\d(?=[^,}][^,}])" options:0 error:&error];
         
         /**
          * A pattern that is used to determine if a numberFormat under availableFormats
@@ -139,7 +139,7 @@
          * @type {RegExp}
          * @private
          */
-        NSString *eligible_format = [NSString stringWithFormat:@"^[%@]*(\\$\\d[%@]*)+$",
+        NSString *eligible_format = [NSString stringWithFormat:@"[%@]*(\\$\\d[%@]*)+",
                                      self.phoneUtil_.VALID_PUNCTUATION, self.phoneUtil_.VALID_PUNCTUATION];
         self.ELIGIBLE_FORMAT_PATTERN_ = [NSRegularExpression regularExpressionWithPattern:eligible_format options:0 error:&error];
         
@@ -348,7 +348,7 @@
  * @private
  */
 - (BOOL)maybeCreateNewTemplate_
-{    
+{
     // When there are multiple available formats, the formatter uses the first
     // format where a formatting template could be created.
     /** @type {number} */
@@ -369,11 +369,15 @@
         {
             self.currentFormattingPattern_ = pattern;
             NSRange nationalPrefixRange = NSMakeRange(0, [numberFormat.nationalPrefixFormattingRule length]);
-            NSTextCheckingResult *matchResult =
+            if (nationalPrefixRange.length > 0) {
+                NSTextCheckingResult *matchResult =
                 [self.NATIONAL_PREFIX_SEPARATORS_PATTERN_ firstMatchInString:numberFormat.nationalPrefixFormattingRule
                                                                      options:0
                                                                        range:nationalPrefixRange];
-            self.shouldAddSpaceAfterNationalPrefix_ = (matchResult != nil);
+                self.shouldAddSpaceAfterNationalPrefix_ = (matchResult != nil);
+            } else {
+                self.shouldAddSpaceAfterNationalPrefix_ = NO;
+            }
             // With a new formatting template, the matched position using the old
             // template needs to be reset.
             self.lastMatchPosition_ = 0;
@@ -390,7 +394,7 @@
  * @private
  */
 - (void)getAvailableFormats_:(NSString*)leadingThreeDigits
-{    
+{
     /** @type {Array.<i18n.phonenumbers.NumberFormat>} */
     BOOL isIntlNumberFormats = (self.isCompleteNumber_ && self.currentMetaData_.intlNumberFormats.count > 0);
     NSMutableArray *formatList = isIntlNumberFormats ? self.currentMetaData_.intlNumberFormats : self.currentMetaData_.numberFormats;
@@ -474,7 +478,7 @@
  * @private
  */
 - (BOOL)createFormattingTemplate_:(NBNumberFormat*)format
-{    
+{
     /** @type {string} */
     NSString *numberPattern = format.pattern;
     
@@ -488,11 +492,11 @@
     
     // Replace anything in the form of [..] with \d
     numberPattern = [self.CHARACTER_CLASS_PATTERN_ stringByReplacingMatchesInString:numberPattern options:0 range:NSMakeRange(0, [numberPattern length])
-                                                                      withTemplate:@"\\\\d"];
+                                                                       withTemplate:@"\\\\d"];
     
     // Replace any standalone digit (not the one in d{}) with \d
     numberPattern = [self.STANDALONE_DIGIT_PATTERN_ stringByReplacingMatchesInString:numberPattern options:0 range:NSMakeRange(0, [numberPattern length])
-                                                                       withTemplate:@"\\\\d"];
+                                                                        withTemplate:@"\\\\d"];
     self.formattingTemplate_ = [NSMutableString stringWithString:@""];
     
     /** @type {string} */
@@ -521,7 +525,7 @@
     // numberPattern by applying the pattern to the longestPhoneNumber string.
     /** @type {string} */
     NSString *longestPhoneNumber = @"999999999999999";
-
+    
     /** @type {Array.<string>} */
     NSArray *m = [self.phoneUtil_ matchedStringByRegex:longestPhoneNumber regex:numberPattern];
     
@@ -730,7 +734,7 @@
  * @private
  */
 - (NSString*)attemptToChoosePatternWithPrefixExtracted_
-{    
+{
     self.ableToFormat_ = YES;
     self.isExpectingCountryCallingCode_ = NO;
     [self.possibleFormats_ removeAllObjects];
@@ -814,10 +818,14 @@
         BOOL isPatternRegExp = [[self.phoneUtil_ matchesByRegex:nationalNumber regex:patternRegExp] count] > 0;
         if (isPatternRegExp)
         {
-            NSArray *matches = [self.NATIONAL_PREFIX_SEPARATORS_PATTERN_ matchesInString:numberFormat.nationalPrefixFormattingRule options:0
-                                                                                   range:NSMakeRange(0, numberFormat.nationalPrefixFormattingRule.length)];
-            self.shouldAddSpaceAfterNationalPrefix_ = [matches count] > 0;
-
+            if (numberFormat.nationalPrefixFormattingRule.length > 0) {
+                NSArray *matches = [self.NATIONAL_PREFIX_SEPARATORS_PATTERN_ matchesInString:numberFormat.nationalPrefixFormattingRule options:0
+                                                                                       range:NSMakeRange(0, numberFormat.nationalPrefixFormattingRule.length)];
+                self.shouldAddSpaceAfterNationalPrefix_ = [matches count] > 0;
+            } else {
+                self.shouldAddSpaceAfterNationalPrefix_ = NO;
+            }
+            
             /** @type {string} */
             NSString *formattedNumber = [self.phoneUtil_ replaceStringByRegex:nationalNumber regex:pattern withTemplate:numberFormat.format];
             return [self appendNationalNumber_:formattedNumber];
@@ -1020,7 +1028,7 @@
  * @private
  */
 - (BOOL)attemptToExtractIdd_
-{    
+{
     /** @type {string} */
     NSString *accruedInputWithoutFormatting = [self.accruedInputWithoutFormatting_ copy];
     /** @type {RegExp} */
@@ -1108,7 +1116,7 @@
  * @private
  */
 - (NSString*)normalizeAndAccrueDigitsAndPlusSign_:(NSString *)nextChar rememberPosition:(BOOL)rememberPosition
-{    
+{
     /** @type {string} */
     NSString *normalizedChar;
     if ([nextChar isEqualToString:@"+"])
@@ -1137,10 +1145,13 @@
  * @private
  */
 - (NSString*)inputDigitHelper_:(NSString *)nextChar
-{    
+{
     /** @type {string} */
     NSString *formattingTemplate = [self.formattingTemplate_ copy];
-    NSString *subedString = [formattingTemplate substringFromIndex:self.lastMatchPosition_];
+    NSString *subedString = @"";
+    if (formattingTemplate.length > self.lastMatchPosition_) {
+     subedString = [formattingTemplate substringFromIndex:self.lastMatchPosition_];
+    }
     
     if ([self.phoneUtil_ stringPositionByRegex:subedString regex:self.DIGIT_PLACEHOLDER_] >= 0)
     {
