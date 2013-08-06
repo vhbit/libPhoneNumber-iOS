@@ -12,3 +12,6 @@ Aaron Wojnowski (aaronwojnowski@gmail.com)
   
 stonyw
   - Handle char @ when normalize any strings, eg email
+
+Yosi Taguri (http://ahhhpah.com)
+  - Failed tests are down to 18 for [ AsYouTypeFormatter ]
