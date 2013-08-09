@@ -35,8 +35,6 @@
 
 @implementation NBAsYouTypeFormatter
 
-
-#warning Not working completely should fix (reg exp part)
 - (id)init
 {
     self = [super init];
