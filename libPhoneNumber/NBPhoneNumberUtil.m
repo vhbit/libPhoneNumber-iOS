@@ -43,11 +43,11 @@ NSString *VALID_ALPHA_ = @"A-Za-z";
 NSString *NON_DIGITS_PATTERN_ = @"\\D+";
 NSString *CC_PATTERN_ = @"\\$CC";
 NSString *FIRST_GROUP_PATTERN_ = @"(\\$\\d)";
-NSString *FIRST_GROUP_ONLY_PREFIX_PATTERN_ = @"\\(?\\$1\\)?";
+NSString *FIRST_GROUP_ONLY_PREFIX_PATTERN_ = @"^\\(?\\$1\\)?";
 NSString *NP_PATTERN_ = @"\\$NP";
 NSString *FG_PATTERN_ = @"\\$FG";
 NSString *VALID_ALPHA_PHONE_PATTERN_STRING = @"(?:.*?[A-Za-z]){3}.*";
-NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)?";
+NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d]+)?";
 
 
 #pragma mark - NBPhoneNumberUtil interface -
@@ -479,7 +479,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
 
 - (void)initRegularExpressionSet
 {
-    _VALID_PUNCTUATION = @"-x\u2010-\u2015\u2212\u30FC\uFF0D-\uFF0F \u00A0\u00AD\u200B\u2060\u3000()\uFF08\uFF09\uFF3B\uFF3D.\\[\\]/~\u2053\u223C\uFF5E";
+    _VALID_PUNCTUATION = @"-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～";
     _VALID_DIGITS_STRING = @"0-9０-９٠-٩۰-۹";
     _PLUS_CHARS_ = @"+＋";
     _REGION_CODE_FOR_NON_GEO_ENTITY = @"001";
@@ -1113,7 +1113,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\u2053\u223C\uFF5E][\\d]+)
         hasFound = YES;
     }
     
-    return (([nationalPrefixFormattingRule length] <= 0) || hasFound);
+    return (([nationalPrefixFormattingRule length] == 0) || hasFound);
 }
 
 

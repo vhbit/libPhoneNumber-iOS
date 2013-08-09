@@ -139,8 +139,7 @@
          * @type {RegExp}
          * @private
          */
-        NSString *eligible_format = [NSString stringWithFormat:@"[%@]*(\\$\\d[%@]*)+",
-                                     self.phoneUtil_.VALID_PUNCTUATION, self.phoneUtil_.VALID_PUNCTUATION];
+        NSString *eligible_format = @"^[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*(\\$\\d[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*)+$";
         self.ELIGIBLE_FORMAT_PATTERN_ = [NSRegularExpression regularExpressionWithPattern:eligible_format options:0 error:&error];
         
         /**
@@ -827,7 +826,9 @@
             }
             
             /** @type {string} */
-            NSString *formattedNumber = [self.phoneUtil_ replaceStringByRegex:nationalNumber regex:pattern withTemplate:numberFormat.format];
+            NSString *formattedNumber = [self.phoneUtil_ replaceStringByRegex:nationalNumber
+                                                                        regex:pattern
+                                                                 withTemplate:numberFormat.format];
             return [self appendNationalNumber_:formattedNumber];
         }
     }
