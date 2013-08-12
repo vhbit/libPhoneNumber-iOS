@@ -12,6 +12,9 @@
 #import "NBPhoneMetaData.h"
 #import "math.h"
 
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+
 
 #pragma mark - Static Int variables -
 const static UInt32 NANPA_COUNTRY_CODE_ = 1;
@@ -3669,7 +3672,6 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d
     return [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:NO checkRegion:YES];
 }
 
-
 - (NBPhoneNumber*)parse:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion error:(NSError**)error
 {
     NBPhoneNumber *phoneNumber = nil;
@@ -3685,6 +3687,29 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d
     }
     
     return phoneNumber;
+}
+
+/**
+ * Parses a string using the phone's carrier region (when available, ZZ otherwise).
+ * This uses the country the sim card in the phone is registered with.
+ * For example if you have an AT&T sim card but are in Europe, this will parse the
+ * number using +1 (AT&T is a US Carrier) as the default country code.
+ * This also works for CDMA phones which don't have a sim card.
+ */
+- (NBPhoneNumber*)parseWithPhoneCarrierRegion:(NSString*)numberToParse error:(NSError**)error
+{
+	NSString *(^ISOCountryCodeByCarrier)() = ^() {
+		CTTelephonyNetworkInfo *networkInfo = [[CTTelephonyNetworkInfo alloc] init];
+		CTCarrier *carrier = [networkInfo subscriberCellularProvider];
+		return [carrier isoCountryCode];
+	};
+	NSString *isoCode = ISOCountryCodeByCarrier();
+	
+	if (!isoCode) {
+		isoCode = @"ZZ";
+	}
+	
+	return [self parse:numberToParse defaultRegion:isoCode];
 }
 
 
