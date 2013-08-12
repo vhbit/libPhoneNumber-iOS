@@ -3667,11 +3667,11 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d
  *     viable phone number or if no default region was supplied and the number
  *     is not in international format (does not start with +).
  */
-
 - (NBPhoneNumber*)parse:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion
 {
     return [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:NO checkRegion:YES];
 }
+
 
 - (NBPhoneNumber*)parse:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion error:(NSError**)error
 {
