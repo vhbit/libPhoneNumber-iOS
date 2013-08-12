@@ -86,16 +86,17 @@
 }
 
 
-// This unit test ALWAYS FAIL ... until google libPhoneNumber fix this issue
+// FIXME: This unit test ALWAYS FAIL ... until google libPhoneNumber fix this issue
 - (void)testAustriaNationalNumberParsing
 {
+    NSError *aError = nil;
+    
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstance];
     NSString *internationalNumberForInput = @"436606545646";
     NSString *nationalNumberForExpect = @"6606545646";
     NSString *defaultRegion = @"AT";
     
-    
-    NBPhoneNumber *phoneNumber = [phoneUtil parse:internationalNumberForInput defaultRegion:defaultRegion error:nil];
+    NBPhoneNumber *phoneNumber = [phoneUtil parse:internationalNumberForInput defaultRegion:defaultRegion error:&aError];
     NSString *nationalNumberForActual = [NSString stringWithFormat:@"%llu", phoneNumber.nationalNumber];
     
     // ALWAYS FAIL need fix "google libPhoneNumber"
@@ -160,6 +161,8 @@
 
 - (void)testWithTestData
 {
+    NSError *aError = nil;
+    
     NBPhoneNumberUtil *phoneUtil = [NBPhoneNumberUtil sharedInstanceForTest];
     
     // Set up some test numbers to re-use.
@@ -1744,7 +1747,7 @@
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"+6423456789";
         countryCallingCode = 64;
-        numberToFill = [[NSString alloc] init];
+        numberToFill = @"";
         STAssertEquals(countryCallingCode, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
                                                                      nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number], nil);
         STAssertEquals(NBECountryCodeSourceFROM_NUMBER_WITH_PLUS_SIGN, [number.countryCodeSource intValue], @"Did not figure out CountryCodeSource correctly");
@@ -1752,14 +1755,14 @@
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"+80012345678";
         countryCallingCode = 800;
-        numberToFill = [[NSString alloc] init];
+        numberToFill = @"";
         STAssertEquals(countryCallingCode, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
                                                  nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number], nil);
         STAssertEquals(NBECountryCodeSourceFROM_NUMBER_WITH_PLUS_SIGN, [number.countryCodeSource intValue], @"Did not figure out CountryCodeSource correctly");
         
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"2345-6789";
-        numberToFill = [[NSString alloc] init];
+        numberToFill = @"";
         STAssertEquals((UInt32)0, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
                                                  nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number], nil);
         STAssertEquals(NBECountryCodeSourceFROM_DEFAULT_COUNTRY, [number.countryCodeSource intValue], @"Did not figure out CountryCodeSource correctly");
@@ -1767,7 +1770,7 @@
                                  
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"0119991123456789";
-        numberToFill = [[NSString alloc] init];
+        numberToFill = @"";
         @try {
             [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
                                 nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number];
@@ -1781,7 +1784,7 @@
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"(1 610) 619 4466";
         countryCallingCode = 1;
-        numberToFill = [[NSString alloc] init];
+        numberToFill = @"";
         @try {
             STAssertEquals(countryCallingCode, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
                                                                          nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number],
@@ -1795,7 +1798,7 @@
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"(1 610) 619 4466";
         countryCallingCode = 1;
-        numberToFill = [[NSString alloc] init];
+        numberToFill = @"";
         @try {
             STAssertEquals(countryCallingCode, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
                                                                             nationalNumber:&numberToFill keepRawInput:NO phoneNumber:&number], nil);
@@ -1806,7 +1809,7 @@
                 
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"(1 610) 619 446";
-        numberToFill = [[NSString alloc] init];
+        numberToFill = @"";
         @try {
             STAssertEquals((UInt32)0, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
                                                         nationalNumber:&numberToFill keepRawInput:NO phoneNumber:&number], nil);
@@ -1818,7 +1821,7 @@
         
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"(1 610) 619";
-        numberToFill = [[NSString alloc] init];
+        numberToFill = @"";
         @try {
             STAssertEquals((UInt32)0, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
                                                            nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number], nil);
