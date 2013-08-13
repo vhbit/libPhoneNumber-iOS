@@ -18,3 +18,4 @@ Yosi Taguri (http://ahhhpah.com)
 
 Nils Hayat (http://nilsou.com)
   - Help to update cocoapods
+  - Added -[NBPhoneNumberUtil parseWithPhoneCarrierRegion:error:] to parse a number using the phone's carrier country code
