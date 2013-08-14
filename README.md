@@ -3,6 +3,7 @@
 * NBPhoneNumber, NBNumberFormat, NBPhoneNumberDesc, NBPhoneMetaData (Metadata classes) 
 
 * NBPhoneNumberUtil (from phonenumberutil.js)
+* NBAsYouTypeFormatter 
 
 ## Install with CocoaPods
 ### Use [CocoaPods](http://cocoapods.org/?q=libPhoneNumber-iOS)
@@ -10,6 +11,7 @@
 ## Install without CocoaPods
 ### Add source files to your projects from libPhoneNumber
     - NBPhoneNumberUtil.h, .m
+    - NBAsYouTypeFormatter.h, .m
     
     - NBNumberFormat.h, .m
     - NBPhoneNumber.h, .m
