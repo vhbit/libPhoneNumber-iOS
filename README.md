@@ -5,8 +5,6 @@
 * NBPhoneNumberUtil (from phonenumberutil.js)
 * NBAsYouTypeFormatter 
 
-* Add [ CoreTelephony.framework ]
-
 ## Install with CocoaPods
 ### Use [CocoaPods](http://cocoapods.org/?q=libPhoneNumber-iOS)
 
@@ -24,6 +22,7 @@
     - NBPhoneNumberMetadataForTesting.h, .m
     
     - Add "NBPhoneNumberMetadata.plist" and "NBPhoneNumberMetadataForTesting.plist" to bundle resources
+    - Add "CoreTelephony.framework"
 
     See sample test code from "libPhoneNumber-iOS / libPhoneNumberTests / libPhoneNumberTests.m"
 
