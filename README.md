@@ -28,8 +28,8 @@
     
     NSError *aError = nil;
     NBPhoneNumber *myNumber = [phoneUtil parse:@"6766077303" defaultRegion:@"AT" error:&aError];
-    if (aError == nil)
-    {
+    
+    if (aError == nil) {
         // Should check error
         NSLog(@"isValidPhoneNumber ? [%@]", [phoneUtil isValidNumber:myNumber] ? @"YES":@"NO");
         NSLog(@"E164          : %@", [phoneUtil format:myNumber numberFormat:NBEPhoneNumberFormatE164 
@@ -41,8 +41,7 @@
         NSLog(@"RFC3966       : %@", [phoneUtil format:myNumber numberFormat:NBEPhoneNumberFormatRFC3966 
                                                  error:&aError]);
     }
-    else
-    {
+    else {
         NSLog(@"Error : %@", [aError localizedDescription]);
     }
     
