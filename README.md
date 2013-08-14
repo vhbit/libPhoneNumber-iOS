@@ -5,7 +5,7 @@
 * NBPhoneNumberUtil (from phonenumberutil.js)
 * NBAsYouTypeFormatter 
 
-Add [ CoreTelephony.framework ]
+* Add [ CoreTelephony.framework ]
 
 ## Install with CocoaPods
 ### Use [CocoaPods](http://cocoapods.org/?q=libPhoneNumber-iOS)
