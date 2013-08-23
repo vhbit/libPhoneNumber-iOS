@@ -58,6 +58,7 @@
 
 
 ### Visit http://code.google.com/p/libphonenumber/ for more information
+#### or zen.isis@gmail.com
 
 ## Metadata managing (updating metadata) 
 #### Step1. Fetch "metadata.js" and "metadatafortesting.js" from Repositories
