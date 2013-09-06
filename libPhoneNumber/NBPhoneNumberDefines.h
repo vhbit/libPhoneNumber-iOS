@@ -63,10 +63,11 @@ typedef enum {
 
 
 typedef enum {
-    NBEValidationResultIS_POSSIBLE = 0,
-    NBEValidationResultINVALID_COUNTRY_CODE = 1,
-    NBEValidationResultTOO_SHORT = 2,
-    NBEValidationResultTOO_LONG = 3
+    NBEValidationResultUNKNOWN = 0,
+    NBEValidationResultIS_POSSIBLE = 1,
+    NBEValidationResultINVALID_COUNTRY_CODE = 2,
+    NBEValidationResultTOO_SHORT = 3,
+    NBEValidationResultTOO_LONG = 4
 } NBEValidationResult;
 
 

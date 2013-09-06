@@ -3002,7 +3002,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d
  */
 - (NBEValidationResult)isPossibleNumberWithReason:(NBPhoneNumber*)number error:(NSError *__autoreleasing *)error
 {
-    NBEValidationResult res = -1;
+    NBEValidationResult res = NBEValidationResultUNKNOWN;
     @try {
         res = [self isPossibleNumberWithReason:number];
     }
