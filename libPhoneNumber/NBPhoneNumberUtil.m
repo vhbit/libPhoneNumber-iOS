@@ -699,7 +699,7 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d
         
         // Check for extra numbers at the end.
         int secondNumberStart = [self stringPositionByRegex:number regex:self.SECOND_NUMBER_START_PATTERN_];
-        if (secondNumberStart >= 0)
+        if (secondNumberStart > 0)
         {
             possibleNumber = [possibleNumber substringWithRange:NSMakeRange(0, secondNumberStart - 1)];
         }
