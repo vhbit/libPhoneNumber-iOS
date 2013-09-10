@@ -3176,12 +3176,11 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d
         return 0;
     }
     
-    UInt32 potentialCountryCode = -1;
     int numberLength = fullNumber.length;
     
     for (int i = 1; i <= MAX_LENGTH_COUNTRY_CODE_ && i <= numberLength; ++i)
     {
-        potentialCountryCode = (UInt32)[[fullNumber substringWithRange:NSMakeRange(0, i)] intValue];
+        UInt32 potentialCountryCode = (UInt32)[[fullNumber substringWithRange:NSMakeRange(0, i)] intValue];
         
         NSArray *regionCodes = [self regionCodeFromCountryCode:potentialCountryCode];
         if (regionCodes != nil && regionCodes.count > 0)
