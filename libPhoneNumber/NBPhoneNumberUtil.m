@@ -3180,7 +3180,8 @@ NSString *UNIQUE_INTERNATIONAL_PREFIX_ = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d
     
     for (int i = 1; i <= MAX_LENGTH_COUNTRY_CODE_ && i <= numberLength; ++i)
     {
-        UInt32 potentialCountryCode = (UInt32)[[fullNumber substringWithRange:NSMakeRange(0, i)] intValue];
+        NSString *subNumber = [fullNumber substringWithRange:NSMakeRange(0, i)];
+        UInt32 potentialCountryCode = [[NSNumber numberWithInteger:[subNumber integerValue]] unsignedLongValue];
         
         NSArray *regionCodes = [self regionCodeFromCountryCode:potentialCountryCode];
         if (regionCodes != nil && regionCodes.count > 0)
