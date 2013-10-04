@@ -11,6 +11,7 @@
 		29F3A15E17B98B3C005D8E07 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29F3A15C17B98AE1005D8E07 /* CoreTelephony.framework */; };
 		8F04BE90176F062500076CB4 /* NBAsYouTypeFormatterTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FD57B66C16E5B71F000772AF /* NBAsYouTypeFormatterTest.m */; };
 		8FE047B5174389F300CCA610 /* NBAsYouTypeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = FD4C786916DB62AC00473849 /* NBAsYouTypeFormatter.m */; };
+		E1A8557317FE874700A4CDFF /* NSArray+NBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A8557217FE874700A4CDFF /* NSArray+NBAdditions.m */; };
 		FD0BD7781679DDA700B19065 /* NBPhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = FD0BD7771679DDA600B19065 /* NBPhoneNumber.m */; };
 		FD7A0621167715A0004BBEB6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7A0620167715A0004BBEB6 /* UIKit.framework */; };
 		FD7A0623167715A0004BBEB6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7A0622167715A0004BBEB6 /* Foundation.framework */; };
@@ -89,6 +90,8 @@
 /* Begin PBXFileReference section */
 		29F3A15C17B98AE1005D8E07 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		4D43EF831740825100C24FF3 /* libPhoneNumber-iOS.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libPhoneNumber-iOS.podspec"; sourceTree = SOURCE_ROOT; };
+		E1A8557117FE874700A4CDFF /* NSArray+NBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+NBAdditions.h"; sourceTree = "<group>"; };
+		E1A8557217FE874700A4CDFF /* NSArray+NBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+NBAdditions.m"; sourceTree = "<group>"; };
 		FD0BD7761679DDA600B19065 /* NBPhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumber.h; sourceTree = "<group>"; };
 		FD0BD7771679DDA600B19065 /* NBPhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumber.m; sourceTree = "<group>"; };
 		FD2014DC169A8A82003491D9 /* index.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = index.php; sourceTree = "<group>"; };
@@ -182,6 +185,8 @@
 				FD0BD7761679DDA600B19065 /* NBPhoneNumber.h */,
 				FD0BD7771679DDA600B19065 /* NBPhoneNumber.m */,
 				FDBCAD2016954FE4005E0334 /* NBPhoneNumberDefines.h */,
+				E1A8557117FE874700A4CDFF /* NSArray+NBAdditions.h */,
+				E1A8557217FE874700A4CDFF /* NSArray+NBAdditions.m */,
 				FD7A066116771A54004BBEB6 /* NBPhoneNumberDesc.h */,
 				FD7A066216771A54004BBEB6 /* NBPhoneNumberDesc.m */,
 				FD7A0655167715B2004BBEB6 /* NBPhoneNumberUtil.h */,
@@ -448,6 +453,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD9E3AF6169E62B6007E06CC /* NBPhoneMetaDataGenerator.m in Sources */,
+				E1A8557317FE874700A4CDFF /* NSArray+NBAdditions.m in Sources */,
 				FD7A062D167715A0004BBEB6 /* main.m in Sources */,
 				FD7A0631167715A0004BBEB6 /* AppDelegate.m in Sources */,
 				FD7A0657167715B2004BBEB6 /* NBPhoneNumberUtil.m in Sources */,

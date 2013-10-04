@@ -11,6 +11,7 @@
 #import "NBPhoneNumberUtil.h"
 #import "NBPhoneMetaData.h"
 #import "NBNumberFormat.h"
+#import "NSArray+NBAdditions.h"
 
 
 @interface NBAsYouTypeFormatter ()

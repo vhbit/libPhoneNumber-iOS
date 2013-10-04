@@ -6,7 +6,7 @@
 //
 
 #import "NBNumberFormat.h"
-#import "NBPhoneNumberDefines.h"
+#import "NSArray+NBAdditions.h"
 
 @implementation NBNumberFormat
 
