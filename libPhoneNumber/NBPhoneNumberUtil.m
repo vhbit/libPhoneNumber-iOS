@@ -74,6 +74,7 @@ NSString * const VALID_DIGITS_STRING = @"0-9０-９٠-٩۰-۹";
 NSString * const PLUS_CHARS = @"+＋";
 NSString * const REGION_CODE_FOR_NON_GEO_ENTITY = @"001";
 static NSDictionary *DIGIT_MAPPINGS;
+static NSMutableDictionary *regexPatternCache;
 
 
 
@@ -150,6 +151,15 @@ static NSDictionary *DIGIT_MAPPINGS;
     return YES;
 }
 
+- (NSRegularExpression *)regularExpressionWithPattern:(NSString *)pattern options:(NSRegularExpressionOptions)options error:(NSError **)error
+{
+    NSRegularExpression *regex = [regexPatternCache objectForKey:pattern];
+    if (!regex) {
+        regex = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:error];
+        [regexPatternCache setObject:regex forKey:pattern];
+    }
+    return regex;
+}
 
 - (NSMutableArray*)componentsSeparatedByRegex:(NSString*)sourceString regex:(NSString*)pattern
 {
@@ -167,7 +177,7 @@ static NSDictionary *DIGIT_MAPPINGS;
     }
     
     NSError *error = nil;
-    NSRegularExpression *currentPattern = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+    NSRegularExpression *currentPattern = [self regularExpressionWithPattern:pattern options:0 error:&error];
     NSArray *matches = [currentPattern matchesInString:sourceString options:0 range:NSMakeRange(0, sourceString.length)];
     
     int foundPosition = -1;
@@ -199,7 +209,7 @@ static NSDictionary *DIGIT_MAPPINGS;
     NSString *replacementResult = [sourceString copy];
     NSError *error = nil;
     
-    NSRegularExpression *currentPattern = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+    NSRegularExpression *currentPattern = [self regularExpressionWithPattern:pattern options:0 error:&error];
     NSRange replaceRange = [currentPattern rangeOfFirstMatchInString:sourceString options:0 range:NSMakeRange(0, sourceString.length)];
     
     if (replaceRange.location != NSNotFound)
@@ -218,7 +228,7 @@ static NSDictionary *DIGIT_MAPPINGS;
     NSString *replacementResult = [sourceString copy];
     NSError *error = nil;
     
-    NSRegularExpression *currentPattern = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+    NSRegularExpression *currentPattern = [self regularExpressionWithPattern:pattern options:0 error:&error];
     NSArray *matches = [currentPattern matchesInString:sourceString options:0 range:NSMakeRange(0, sourceString.length)];
     
     if ([matches count] == 1)
@@ -248,7 +258,7 @@ static NSDictionary *DIGIT_MAPPINGS;
 - (NSTextCheckingResult*)matcheFirstByRegex:(NSString*)sourceString regex:(NSString*)pattern
 {
     NSError *error = nil;
-    NSRegularExpression *currentPattern = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+    NSRegularExpression *currentPattern = [self regularExpressionWithPattern:pattern options:0 error:&error];
     NSArray *matches = [currentPattern matchesInString:sourceString options:0 range:NSMakeRange(0, sourceString.length)];
     if ([matches count] > 0)
         return [matches objectAtIndex:0];
@@ -259,7 +269,7 @@ static NSDictionary *DIGIT_MAPPINGS;
 - (NSArray*)matchesByRegex:(NSString*)sourceString regex:(NSString*)pattern
 {
     NSError *error = nil;
-    NSRegularExpression *currentPattern = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+    NSRegularExpression *currentPattern = [self regularExpressionWithPattern:pattern options:0 error:&error];
     NSArray *matches = [currentPattern matchesInString:sourceString options:0 range:NSMakeRange(0, sourceString.length)];
     return matches;
 }
@@ -283,7 +293,7 @@ static NSDictionary *DIGIT_MAPPINGS;
 - (BOOL)isStartingStringByRegex:(NSString*)sourceString regex:(NSString*)pattern
 {
     NSError *error = nil;
-    NSRegularExpression *currentPattern = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+    NSRegularExpression *currentPattern = [self regularExpressionWithPattern:pattern options:0 error:&error];
     NSArray *matches = [currentPattern matchesInString:sourceString options:0 range:NSMakeRange(0, sourceString.length)];
     
     for (NSTextCheckingResult *match in matches)
@@ -512,7 +522,7 @@ static NSDictionary *DIGIT_MAPPINGS;
     NSError *error = nil;
     
     if (!PLUS_CHARS_PATTERN) {
-        PLUS_CHARS_PATTERN = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"[%@]+", PLUS_CHARS] options:0 error:&error];
+        PLUS_CHARS_PATTERN = [self regularExpressionWithPattern:[NSString stringWithFormat:@"[%@]+", PLUS_CHARS] options:0 error:&error];
     }
     
     if (!LEADING_PLUS_CHARS_PATTERN) {
@@ -520,7 +530,7 @@ static NSDictionary *DIGIT_MAPPINGS;
     }
     
     if (!CAPTURING_DIGIT_PATTERN) {
-        CAPTURING_DIGIT_PATTERN = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"([%@])", VALID_DIGITS_STRING] options:0 error:&error];
+        CAPTURING_DIGIT_PATTERN = [self regularExpressionWithPattern:[NSString stringWithFormat:@"([%@])", VALID_DIGITS_STRING] options:0 error:&error];
     }
     
     if (!VALID_START_CHAR_PATTERN) {
@@ -532,7 +542,7 @@ static NSDictionary *DIGIT_MAPPINGS;
     }
     
     if (!VALID_ALPHA_PHONE_PATTERN) {
-        VALID_ALPHA_PHONE_PATTERN = [NSRegularExpression regularExpressionWithPattern:VALID_ALPHA_PHONE_PATTERN_STRING options:0 error:&error];
+        VALID_ALPHA_PHONE_PATTERN = [self regularExpressionWithPattern:VALID_ALPHA_PHONE_PATTERN_STRING options:0 error:&error];
     }
     
     if (!UNWANTED_END_CHAR_PATTERN) {
@@ -3571,8 +3581,7 @@ static NSDictionary *DIGIT_MAPPINGS;
     // Attempt to parse the first digits as a national prefix.
     NSString *prefixPattern = [NSString stringWithFormat:@"^(?:%@)", possibleNationalPrefix];
     NSError *error = nil;
-    NSRegularExpression *currentPattern = [NSRegularExpression regularExpressionWithPattern:prefixPattern
-                                                                                    options:0 error:&error];
+    NSRegularExpression *currentPattern = [self regularExpressionWithPattern:prefixPattern options:0 error:&error];
     
     NSArray *prefixMatcher = [currentPattern matchesInString:numberStr options:0 range:NSMakeRange(0, numberLength)];
     if (prefixMatcher && [prefixMatcher count] > 0)
@@ -4335,7 +4344,7 @@ static NSDictionary *DIGIT_MAPPINGS;
     }
     
     NSError *error = nil;
-    NSRegularExpression *currentPattern = [NSRegularExpression regularExpressionWithPattern:regex options:0 error:&error];
+    NSRegularExpression *currentPattern = [self regularExpressionWithPattern:regex options:0 error:&error];
     NSTextCheckingResult *matchResult = [currentPattern firstMatchInString:str options:0 range:NSMakeRange(0, str.length)];
     
     if (matchResult != nil)
