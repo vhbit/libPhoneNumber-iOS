@@ -757,8 +757,8 @@
  */
 - (BOOL)isDigitOrLeadingPlusSign_:(NSString*)nextChar
 {
-    NSString *digitPattern = [NSString stringWithFormat:@"([%@])", [self.phoneUtil_ VALID_DIGITS_STRING]];
-    NSString *plusPattern = [NSString stringWithFormat:@"[%@]+", [self.phoneUtil_ PLUS_CHARS_]];
+    NSString *digitPattern = [NSString stringWithFormat:@"([%@])", VALID_DIGITS_STRING];
+    NSString *plusPattern = [NSString stringWithFormat:@"[%@]+", PLUS_CHARS];
     
     BOOL isDigitPattern = [[self.phoneUtil_ matchesByRegex:nextChar regex:digitPattern] count] > 0;
     BOOL isPlusPattern = [[self.phoneUtil_ matchesByRegex:nextChar regex:plusPattern] count] > 0;
@@ -1053,7 +1053,7 @@
     /** @type {string} */
     NSString *newRegionCode = [self.phoneUtil_ getRegionCodeForCountryCode:countryCode];
     
-    if ([[self.phoneUtil_ REGION_CODE_FOR_NON_GEO_ENTITY] isEqualToString:newRegionCode]) {
+    if ([REGION_CODE_FOR_NON_GEO_ENTITY isEqualToString:newRegionCode]) {
         self.currentMetaData_ = [self.phoneUtil_ getMetadataForNonGeographicalRegion:countryCode];
     } else if (newRegionCode != self.defaultCountry_)
     {
