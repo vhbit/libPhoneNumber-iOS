@@ -3758,18 +3758,19 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NBPhoneNumber*)parseWithPhoneCarrierRegion:(NSString*)numberToParse error:(NSError**)error
 {
-	NSString *(^ISOCountryCodeByCarrier)() = ^() {
-		CTTelephonyNetworkInfo *networkInfo = [[CTTelephonyNetworkInfo alloc] init];
-		CTCarrier *carrier = [networkInfo subscriberCellularProvider];
-		return [carrier isoCountryCode];
-	};
-	NSString *isoCode = ISOCountryCodeByCarrier();
-	
+	return [self parse:numberToParse defaultRegion:[self countyCodeByCarrier]];
+}
+
+- (NSString *)countyCodeByCarrier
+{
+    CTTelephonyNetworkInfo *networkInfo = [[CTTelephonyNetworkInfo alloc] init];
+    NSString *isoCode = [[networkInfo subscriberCellularProvider] isoCountryCode];
+    
 	if (!isoCode) {
 		isoCode = @"ZZ";
 	}
-	
-	return [self parse:numberToParse defaultRegion:isoCode];
+    
+    return isoCode;
 }
 
 

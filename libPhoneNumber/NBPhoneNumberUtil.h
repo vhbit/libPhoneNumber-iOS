@@ -45,6 +45,7 @@ extern NSString * const REGION_CODE_FOR_NON_GEO_ENTITY;
 
 - (NSString*)extractPossibleNumber:(NSString*)phoneNumber;
 - (UInt32)extractCountryCode:(NSString*)fullNumber nationalNumber:(NSString**)nationalNumber;
+- (NSString *)countyCodeByCarrier;
 
 - (NSString*)getNddPrefixForRegion:(NSString*)regionCode stripNonDigits:(BOOL)stripNonDigits;
 - (NSString*)getNationalSignificantNumber:(NBPhoneNumber*)phoneNumber;
