@@ -19,3 +19,11 @@ Yosi Taguri (http://ahhhpah.com)
 Nils Hayat (http://nilsou.com)
   - Help to update cocoapods
   - Added -[NBPhoneNumberUtil parseWithPhoneCarrierRegion:error:] to parse a number using the phone's carrier country code
+
+Frane Bandov frane (frane@offbyte.com, http://frane.offbyte.com)
+  - Refactor to reduce memory consumption
+  	(Export NSArray category into separate files,
+  	Optimize constants,
+  	Cache regex patterns to reduce memory and CPU consumption,
+  	Make countyCodeByCarrier method publically available,
+  	Add libPhoneNumber.{h,m} to podspec)
