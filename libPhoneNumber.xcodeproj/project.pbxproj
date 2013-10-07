@@ -208,10 +208,10 @@
 		FD7A0611167715A0004BBEB6 = {
 			isa = PBXGroup;
 			children = (
-				FD7A061F167715A0004BBEB6 /* Frameworks */,
 				FD7A0626167715A0004BBEB6 /* libPhoneNumber */,
 				FD7A0644167715A1004BBEB6 /* libPhoneNumber UnitTest */,
 				FD9E3ADD169E5176007E06CC /* libPhoneNumberiOS */,
+				FD7A061F167715A0004BBEB6 /* Frameworks */,
 				FD7A061D167715A0004BBEB6 /* Products */,
 			);
 			sourceTree = "<group>";
