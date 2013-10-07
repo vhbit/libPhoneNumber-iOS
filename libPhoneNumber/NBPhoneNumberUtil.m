@@ -153,11 +153,16 @@ static NSMutableDictionary *regexPatternCache;
 
 - (NSRegularExpression *)regularExpressionWithPattern:(NSString *)pattern options:(NSRegularExpressionOptions)options error:(NSError **)error
 {
+	if (!regexPatternCache) {
+        regexPatternCache = [[NSMutableDictionary alloc] init];
+    }
+    
     NSRegularExpression *regex = [regexPatternCache objectForKey:pattern];
     if (!regex) {
         regex = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:error];
         [regexPatternCache setObject:regex forKey:pattern];
     }
+
     return regex;
 }
 
