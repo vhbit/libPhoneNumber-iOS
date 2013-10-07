@@ -6,7 +6,7 @@
 //
 
 #import "NBPhoneNumberDesc.h"
-#import "NBPhoneNumberDefines.h"
+#import "NSArray+NBAdditions.h"
 
 @implementation NBPhoneNumberDesc
 

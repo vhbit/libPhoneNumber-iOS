@@ -8,6 +8,12 @@
 #import <Foundation/Foundation.h>
 #import "NBPhoneNumberDefines.h"
 
+extern NSString * const VALID_PUNCTUATION;
+extern NSString * const VALID_DIGITS_STRING;
+extern NSString * const PLUS_CHARS;
+extern NSString * const REGION_CODE_FOR_NON_GEO_ENTITY;
+
+
 @class NBPhoneMetaData, NBPhoneNumber;
 
 @interface NBPhoneNumberUtil : NSObject
@@ -39,6 +45,7 @@
 
 - (NSString*)extractPossibleNumber:(NSString*)phoneNumber;
 - (UInt32)extractCountryCode:(NSString*)fullNumber nationalNumber:(NSString**)nationalNumber;
+- (NSString *)countyCodeByCarrier;
 
 - (NSString*)getNddPrefixForRegion:(NSString*)regionCode stripNonDigits:(BOOL)stripNonDigits;
 - (NSString*)getNationalSignificantNumber:(NBPhoneNumber*)phoneNumber;
@@ -99,10 +106,6 @@
 
 - (BOOL)formattingRuleHasFirstGroupOnly:(NSString*)nationalPrefixFormattingRule;
 
-@property (nonatomic, strong, readonly) NSString *VALID_PUNCTUATION;
-@property (nonatomic, strong, readonly) NSString *VALID_DIGITS_STRING;
-@property (nonatomic, strong, readonly) NSString *PLUS_CHARS_;
-@property (nonatomic, strong, readonly) NSString *REGION_CODE_FOR_NON_GEO_ENTITY;
 @property (nonatomic, strong, readonly) NSDictionary *DIGIT_MAPPINGS;
 
 @end

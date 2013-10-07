@@ -14,6 +14,6 @@ DESC
   s.platform     = :ios, '4.3'
   s.framework    = 'CoreTelephony'
   s.requires_arc = true
-  s.source_files = 'libPhoneNumber/NBPhoneNumber.{h,m}', 'libPhoneNumber/NBNumberFormat.{h,m}', 'libPhoneNumber/NBPhoneNumberDesc.{h,m}', 'libPhoneNumber/NBPhoneMetaData.{h,m}', 'libPhoneNumber/NBPhoneNumberUtil.{h,m}', 'libPhoneNumber/NBAsYouTypeFormatter.{h,m}', 'libPhoneNumber/NBPhoneNumberDefines.h'
+  s.source_files = 'libPhoneNumber/NBPhoneNumber.{h,m}', 'libPhoneNumber/NBNumberFormat.{h,m}', 'libPhoneNumber/NBPhoneNumberDesc.{h,m}', 'libPhoneNumber/NBPhoneMetaData.{h,m}', 'libPhoneNumber/NBPhoneNumberUtil.{h,m}', 'libPhoneNumber/NBAsYouTypeFormatter.{h,m}', 'libPhoneNumber/NBPhoneNumberDefines.h', 'libPhoneNumber/NSArray+NBAdditions.{h,m}'
   s.resources = "libPhoneNumber/**/NBPhoneNumberMetadata.plist"
 end
