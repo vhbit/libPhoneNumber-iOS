@@ -8,6 +8,8 @@
 #import "AppDelegate.h"
 #import "NBPhoneMetaDataGenerator.h"
 
+#import "NBPhoneNumberUtil.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -21,6 +23,17 @@
     
     return YES;
 }
+
+/*
+- (NSString *)getPhoneNumberFormatted:(NSString *)phoneNumber
+{
+    NSString *retValue;
+    NBPhoneNumberUtil *pnUtil = [NBPhoneNumberUtil sharedInstance];
+    NBPhoneNumber *phoneNumberFormatted = [pnUtil parseWithPhoneCarrierRegion:phoneNumber error:nil];
+    retValue = [pnUtil format:phoneNumberFormatted numberFormat:NBEPhoneNumberFormatRFC3966 error:nil];
+    return retValue;
+}
+*/
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
