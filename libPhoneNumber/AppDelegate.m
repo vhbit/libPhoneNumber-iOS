@@ -8,6 +8,8 @@
 #import "AppDelegate.h"
 #import "NBPhoneMetaDataGenerator.h"
 
+#import "NBPhoneNumberUtil.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

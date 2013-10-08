@@ -3671,7 +3671,13 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NBPhoneNumber*)parseWithPhoneCarrierRegion:(NSString*)numberToParse error:(NSError**)error
 {
-	return [self parse:numberToParse defaultRegion:[self countyCodeByCarrier]];
+    NSString *defaultRegion = nil;
+#if TARGET_IPHONE_SIMULATOR
+    defaultRegion = [[NSLocale currentLocale] objectForKey: NSLocaleCountryCode];
+#else
+    defaultRegion = [self countyCodeByCarrier];
+#endif
+    return [self parse:numberToParse defaultRegion:defaultRegion];
 }
 
 - (NSString *)countyCodeByCarrier
