@@ -85,6 +85,19 @@
     return stringType;
 }
 
+- (NSString *)getPhoneNumberFormatted:(NSString *)phoneNumber
+{
+    NSString *retValue;
+    NBPhoneNumberUtil *pnUtil = [NBPhoneNumberUtil sharedInstance];
+    NBPhoneNumber *phoneNumberFormatted = [pnUtil parseWithPhoneCarrierRegion:phoneNumber error:nil];
+    retValue = [pnUtil format:phoneNumberFormatted numberFormat:NBEPhoneNumberFormatRFC3966 error:nil];
+    return retValue;
+}
+
+- (void)testCarrierRegion
+{
+    NSLog(@"testCarrierRegion %@", [self getPhoneNumberFormatted:@"1234567890"]);
+}
 
 // FIXME: This unit test ALWAYS FAIL ... until google libPhoneNumber fix this issue
 - (void)testAustriaNationalNumberParsing

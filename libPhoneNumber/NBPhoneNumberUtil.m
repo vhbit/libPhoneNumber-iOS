@@ -3677,6 +3677,10 @@ static NSMutableDictionary *regexPatternCache;
 #else
     defaultRegion = [self countyCodeByCarrier];
 #endif
+    if ([UNKNOWN_REGION_ isEqualToString:defaultRegion]) {
+        //TODO: if defaultRegion is unknown get defaultRegion other way
+    }
+        
     return [self parse:numberToParse defaultRegion:defaultRegion];
 }
 
@@ -3686,7 +3690,7 @@ static NSMutableDictionary *regexPatternCache;
     NSString *isoCode = [[networkInfo subscriberCellularProvider] isoCountryCode];
     
 	if (!isoCode) {
-		isoCode = @"ZZ";
+		isoCode = UNKNOWN_REGION_;
 	}
     
     return isoCode;
