@@ -94,6 +94,16 @@
     return retValue;
 }
 
+- (void)testForExtraDatas
+{
+    NSArray *arrayData = [[NBPhoneNumberUtil sharedInstance] getAllMetadata];
+    if (arrayData && arrayData.count > 0) {
+        NSLog(@"Log sample metadata [%@]", [arrayData firstObject]);
+    } else {
+        STFail(@"Fail to extract meta data");
+    }
+}
+
 - (void)testCarrierRegion
 {
     NSLog(@"testCarrierRegion %@", [self getPhoneNumberFormatted:@"1234567890"]);

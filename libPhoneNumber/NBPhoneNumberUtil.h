@@ -27,13 +27,13 @@ extern NSString * const REGION_CODE_FOR_NON_GEO_ENTITY;
 - (NSString*)replaceStringByRegex:(NSString*)sourceString regex:(NSString*)pattern withTemplate:(NSString*)templateString;
 - (int)stringPositionByRegex:(NSString*)sourceString regex:(NSString*)pattern;
 
-
 + (NSString*)stringByTrimming:(NSString*)aString;
 
 //- (NSString*)numbersOnly:(NSString*)phoneNumber;
 - (NSArray*)regionCodeFromCountryCode:(UInt32)countryCodeNumber;
 - (NSString*)countryCodeFromRegionCode:(NSString*)regionCode;
 
+- (NSArray*)getAllMetadata;
 
 // libPhoneNumber Util functions
 - (NSString*)convertAlphaCharactersInNumber:(NSString*)number;

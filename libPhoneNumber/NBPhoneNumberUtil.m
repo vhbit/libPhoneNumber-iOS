@@ -4284,5 +4284,29 @@ static NSMutableDictionary *regexPatternCache;
     return NO;
 }
 
+- (NSArray*)getAllMetadata
+{
+    NSArray *countryCodes = [NSLocale ISOCountryCodes];
+    NSMutableArray *resultMetadata = [[NSMutableArray alloc] init];
+    
+    for (NSString *countryCode in countryCodes)
+    {
+        id countryDictionaryInstance = [NSDictionary dictionaryWithObject:countryCode forKey:NSLocaleCountryCode];
+        NSString *identifier = [NSLocale localeIdentifierFromComponents:countryDictionaryInstance];
+        NSString *country = [[NSLocale currentLocale] displayNameForKey:NSLocaleIdentifier value:identifier];
+        
+        NSMutableDictionary *countryMeta = [[NSMutableDictionary alloc] init];
+        [countryMeta setObject:country forKey:@"name"];
+        [countryMeta setObject:countryCode forKey:@"code"];
+        
+        NBPhoneMetaData *metaData = [self getMetadataForRegion:countryCode];
+        if (metaData)
+            [countryMeta setObject:metaData forKey:@"metadata"];
+        
+        [resultMetadata addObject:countryMeta];
+    }
+    
+    return resultMetadata;
+}
 
 @end
