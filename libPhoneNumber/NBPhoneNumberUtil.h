@@ -27,7 +27,6 @@ extern NSString * const REGION_CODE_FOR_NON_GEO_ENTITY;
 - (NSString*)replaceStringByRegex:(NSString*)sourceString regex:(NSString*)pattern withTemplate:(NSString*)templateString;
 - (int)stringPositionByRegex:(NSString*)sourceString regex:(NSString*)pattern;
 
-
 + (NSString*)stringByTrimming:(NSString*)aString;
 
 //- (NSString*)numbersOnly:(NSString*)phoneNumber;
@@ -45,7 +44,7 @@ extern NSString * const REGION_CODE_FOR_NON_GEO_ENTITY;
 
 - (NSString*)extractPossibleNumber:(NSString*)phoneNumber;
 - (UInt32)extractCountryCode:(NSString*)fullNumber nationalNumber:(NSString**)nationalNumber;
-- (NSString *)countyCodeByCarrier;
+- (NSString *)countryCodeByCarrier;
 
 - (NSString*)getNddPrefixForRegion:(NSString*)regionCode stripNonDigits:(BOOL)stripNonDigits;
 - (NSString*)getNationalSignificantNumber:(NBPhoneNumber*)phoneNumber;

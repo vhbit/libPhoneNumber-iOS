@@ -51,6 +51,7 @@ NSString * const NP_PATTERN = @"\\$NP";
 NSString * const FG_PATTERN = @"\\$FG";
 NSString * const VALID_ALPHA_PHONE_PATTERN_STRING = @"(?:.*?[A-Za-z]){3}.*";
 NSString * const UNIQUE_INTERNATIONAL_PREFIX = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d]+)?";
+NSString * const NON_BREAKING_SPACE = @"\\u00a0";
 
 static NSString *LEADING_PLUS_CHARS_PATTERN;
 static NSString *EXTN_PATTERN;
@@ -75,9 +76,6 @@ NSString * const PLUS_CHARS = @"+＋";
 NSString * const REGION_CODE_FOR_NON_GEO_ENTITY = @"001";
 static NSDictionary *DIGIT_MAPPINGS;
 static NSMutableDictionary *regexPatternCache;
-
-
-
 
 
 #pragma mark - NBPhoneNumberUtil interface -
@@ -123,6 +121,10 @@ static NSMutableDictionary *regexPatternCache;
 
 + (NSString*)stringByTrimming:(NSString*)aString
 {
+    if (aString == nil || aString.length <= 0) return aString;
+    
+    aString = [NBPhoneNumberUtil normalizeNonBreakingSpace:aString];
+    
     NSString *aRes = @"";
     NSArray *newlines = [aString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     for (NSString *line in newlines)
@@ -140,9 +142,17 @@ static NSMutableDictionary *regexPatternCache;
 }
 
 
++ (NSString*)normalizeNonBreakingSpace:(NSString*)aString
+{
+    return [aString stringByReplacingOccurrencesOfString:NON_BREAKING_SPACE withString:@" "];
+}
+
+
 #pragma mark - Regular expression Utilities -
 - (BOOL)hasValue:(NSString*)string
 {
+    string = [NBPhoneNumberUtil normalizeNonBreakingSpace:string];
+    
     if (string == nil || [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].length <= 0)
     {
         return NO;
@@ -689,6 +699,8 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NSString*)extractPossibleNumber:(NSString*)number
 {
+    number = [NBPhoneNumberUtil normalizeNonBreakingSpace:number];
+    
     NSString *possibleNumber = @"";
     int start = [self stringPositionByRegex:number regex:VALID_START_CHAR_PATTERN];
     
@@ -728,6 +740,8 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (BOOL)isViablePhoneNumber:(NSString*)phoneNumber
 {
+    phoneNumber = [NBPhoneNumberUtil normalizeNonBreakingSpace:phoneNumber];
+    
     if (phoneNumber.length < MIN_LENGTH_FOR_NSN_)
     {
         return NO;
@@ -756,6 +770,8 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NSString*)normalizePhoneNumber:(NSString*)number
 {
+    number = [NBPhoneNumberUtil normalizeNonBreakingSpace:number];
+    
     if ([self matchesEntirely:VALID_ALPHA_PHONE_PATTERN_STRING string:number])
     {
         return [self normalizeHelper:number normalizationReplacements:ALL_NORMALIZATION_MAPPINGS removeNonMatches:true];
@@ -800,6 +816,8 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NSString*)normalizeDigitsOnly:(NSString*)number
 {
+    number = [NBPhoneNumberUtil normalizeNonBreakingSpace:number];
+    
     return [self stringByReplacingOccurrencesString:number
                                             withMap:self.DIGIT_MAPPINGS removeNonMatches:YES];
 }
@@ -815,6 +833,7 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NSString*)convertAlphaCharactersInNumber:(NSString*)number
 {
+    number = [NBPhoneNumberUtil normalizeNonBreakingSpace:number];
     return [self stringByReplacingOccurrencesString:number
                                             withMap:ALL_NORMALIZATION_MAPPINGS removeNonMatches:NO];
 }
@@ -2880,6 +2899,8 @@ static NSMutableDictionary *regexPatternCache;
         return NO;
     }
     
+    number = [NBPhoneNumberUtil normalizeNonBreakingSpace:number];
+    
     /** @type {!goog.string.StringBuffer} */
     NSString *strippedNumber = [number copy];
     [self maybeStripExtension:&strippedNumber];
@@ -3057,6 +3078,8 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (BOOL)isPossibleNumberString:(NSString*)number regionDialingFrom:(NSString*)regionDialingFrom error:(NSError**)error
 {
+    number = [NBPhoneNumberUtil normalizeNonBreakingSpace:number];
+    
     BOOL res = NO;
     @try {
         res = [self isPossibleNumberString:number regionDialingFrom:regionDialingFrom];
@@ -3143,6 +3166,8 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (UInt32)extractCountryCode:(NSString*)fullNumber nationalNumber:(NSString**)nationalNumber
 {
+    fullNumber = [NBPhoneNumberUtil normalizeNonBreakingSpace:fullNumber];
+    
     if ((fullNumber.length == 0) || ([[fullNumber substringToIndex:1] isEqualToString:@"0"]))
     {
         // Country codes do not begin with a '0'.
@@ -3641,6 +3666,8 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NBPhoneNumber*)parse:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion
 {
+    numberToParse = [NBPhoneNumberUtil normalizeNonBreakingSpace:numberToParse];
+    
     return [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:NO checkRegion:YES];
 }
 
@@ -3671,11 +3698,13 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NBPhoneNumber*)parseWithPhoneCarrierRegion:(NSString*)numberToParse error:(NSError**)error
 {
+    numberToParse = [NBPhoneNumberUtil normalizeNonBreakingSpace:numberToParse];
+    
     NSString *defaultRegion = nil;
 #if TARGET_IPHONE_SIMULATOR
     defaultRegion = [[NSLocale currentLocale] objectForKey: NSLocaleCountryCode];
 #else
-    defaultRegion = [self countyCodeByCarrier];
+    defaultRegion = [self countryCodeByCarrier];
 #endif
     if ([UNKNOWN_REGION_ isEqualToString:defaultRegion]) {
         //TODO: if defaultRegion is unknown get defaultRegion other way
@@ -3684,7 +3713,7 @@ static NSMutableDictionary *regexPatternCache;
     return [self parse:numberToParse defaultRegion:defaultRegion];
 }
 
-- (NSString *)countyCodeByCarrier
+- (NSString *)countryCodeByCarrier
 {
     CTTelephonyNetworkInfo *networkInfo = [[CTTelephonyNetworkInfo alloc] init];
     NSString *isoCode = [[networkInfo subscriberCellularProvider] isoCountryCode];
@@ -3785,6 +3814,8 @@ static NSMutableDictionary *regexPatternCache;
 - (NBPhoneNumber*)parseHelper:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion
                  keepRawInput:(BOOL)keepRawInput checkRegion:(BOOL)checkRegion
 {
+    numberToParse = [NBPhoneNumberUtil normalizeNonBreakingSpace:numberToParse];
+    
     if (numberToParse == nil)
     {
         @throw [NSException exceptionWithName:@"NOT_A_NUMBER" reason:[NSString stringWithFormat:@"NOT_A_NUMBER:%@", numberToParse] userInfo:nil];
