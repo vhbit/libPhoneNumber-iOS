@@ -33,6 +33,7 @@ extern NSString * const REGION_CODE_FOR_NON_GEO_ENTITY;
 - (NSArray*)regionCodeFromCountryCode:(UInt32)countryCodeNumber;
 - (NSString*)countryCodeFromRegionCode:(NSString*)regionCode;
 
+- (NSArray*)getAllMetadata;
 
 // libPhoneNumber Util functions
 - (NSString*)convertAlphaCharactersInNumber:(NSString*)number;
