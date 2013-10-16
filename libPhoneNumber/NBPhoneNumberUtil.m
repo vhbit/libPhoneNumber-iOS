@@ -51,7 +51,8 @@ NSString * const NP_PATTERN = @"\\$NP";
 NSString * const FG_PATTERN = @"\\$FG";
 NSString * const VALID_ALPHA_PHONE_PATTERN_STRING = @"(?:.*?[A-Za-z]){3}.*";
 NSString * const UNIQUE_INTERNATIONAL_PREFIX = @"[\\d]+(?:[~\\u2053\\u223C\\uFF5E][\\d]+)?";
-NSString * const NON_BREAKING_SPACE = @"\\u00a0";
+
+NSString * const NON_BREAKING_SPACE = @"\u00a0";
 
 static NSString *LEADING_PLUS_CHARS_PATTERN;
 static NSString *EXTN_PATTERN;
