@@ -6,6 +6,7 @@ Hyuk Hur (http://hyukhur.tumblr.com)
 Cliff Rowley (cliffrowley@gmail.com)
   - Missing return value in formatInOriginalFormat:regionCallingFrom:error
   - Compatibility with iOS versions prior to 6.x
+  - Added explicit type casts to avoid warnings when building for 64 bit iOS...
 
 Aaron Wojnowski (aaronwojnowski@gmail.com)
   - Remove extra r from the countryCodeFromRegionCode method name.
