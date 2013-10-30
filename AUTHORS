@@ -6,7 +6,6 @@ Hyuk Hur (http://hyukhur.tumblr.com)
 Cliff Rowley (cliffrowley@gmail.com)
   - Missing return value in formatInOriginalFormat:regionCallingFrom:error
   - Compatibility with iOS versions prior to 6.x
-  - Added explicit type casts to avoid warnings when building for 64 bit iOS...
 
 Aaron Wojnowski (aaronwojnowski@gmail.com)
   - Remove extra r from the countryCodeFromRegionCode method name.
@@ -28,3 +27,6 @@ Frane Bandov frane (frane@offbyte.com, http://frane.offbyte.com)
   	Cache regex patterns to reduce memory and CPU consumption,
   	Make countyCodeByCarrier method publically available,
   	Add libPhoneNumber.{h,m} to podspec)
+
+Cliff Ingham (inghamn@bloomington.in.gov, http://bloomington.in.gov/)
+  - Added explicit type casts to avoid warnings when building for 64 bit iOS...
