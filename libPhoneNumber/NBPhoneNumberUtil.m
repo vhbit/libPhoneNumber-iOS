@@ -149,6 +149,14 @@ static NSMutableDictionary *regexPatternCache;
 }
 
 
+#pragma mark - NSError 
+- (NSError*)errorWithObject:(id)obj withDomain:(NSString*)domain
+{
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:obj forKey:NSLocalizedDescriptionKey];
+    NSError *error = [NSError errorWithDomain:domain code:0 userInfo:userInfo];
+    return error;
+}
+
 #pragma mark - Regular expression Utilities -
 - (BOOL)hasValue:(NSString*)string
 {
@@ -461,49 +469,6 @@ static NSMutableDictionary *regexPatternCache;
     
     return unarchiveData;
 }
-
-/*
- - (NSDictionary*)generateMetadata:(id)metaClass
- {
- NSMutableDictionary *resMedata = [[NSMutableDictionary alloc] init];
- NSDictionary *srcMedata = nil;
- 
- if ([metaClass isKindOfClass:[NBPhoneNumberMetadataForTesting class]])
- {
- srcMedata = ((NBPhoneNumberMetadataForTesting*)metaClass).metadata;
- }
- else if ([metaClass isKindOfClass:[NBPhoneNumberMetadata class]])
- {
- srcMedata = ((NBPhoneNumberMetadata*)metaClass).metadata;
- }
- else
- {
- return resMedata;
- }
- 
- NSDictionary *countryCodeToRegionCodeMap = [srcMedata objectForKey:@"countryCodeToRegionCodeMap"];
- NSDictionary *countryToMetadata = [srcMedata objectForKey:@"countryToMetadata"];
- NSLog(@"- countryCodeToRegionCodeMap count [%d]", [countryCodeToRegionCodeMap count]);
- NSLog(@"- countryToMetadata          count [%d]", [countryToMetadata count]);
- 
- NSMutableDictionary *genetatedMetaData = [[NSMutableDictionary alloc] init];
- 
- for (id key in [countryToMetadata allKeys])
- {
- id metaData = [countryToMetadata objectForKey:key];
- 
- NBPhoneMetaData *newMetaData = [[NBPhoneMetaData alloc] init];
- [newMetaData buildData:metaData];
- 
- [genetatedMetaData setObject:newMetaData forKey:key];
- }
- 
- [resMedata setObject:countryCodeToRegionCodeMap forKey:@"countryCodeToRegionCodeMap"];
- [resMedata setObject:genetatedMetaData forKey:@"countryToMetadata"];
- 
- return resMedata;
- }
- */
 
 
 - (void)initRegularExpressionSet
@@ -1866,23 +1831,23 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (BOOL)rawInputContainsNationalPrefix:(NSString*)rawInput nationalPrefix:(NSString*)nationalPrefix regionCode:(NSString*)regionCode
 {
+    BOOL isValid = NO;
     NSString *normalizedNationalNumber = [self normalizeDigitsOnly:rawInput];
     if ([self isStartingStringByRegex:normalizedNationalNumber regex:nationalPrefix])
     {
-        @try {
-            // Some Japanese numbers (e.g. 00777123) might be mistaken to contain the
-            // national prefix when written without it (e.g. 0777123) if we just do
-            // prefix matching. To tackle that, we check the validity of the number if
-            // the assumed national prefix is removed (777123 won't be valid in
-            // Japan).
-            NSString *subString = [normalizedNationalNumber substringFromIndex:nationalPrefix.length];
-            return [self isValidNumber:[self parse:subString defaultRegion:regionCode]];
-        }
-        @catch (NSException *ex) {
+        // Some Japanese numbers (e.g. 00777123) might be mistaken to contain the
+        // national prefix when written without it (e.g. 0777123) if we just do
+        // prefix matching. To tackle that, we check the validity of the number if
+        // the assumed national prefix is removed (777123 won't be valid in
+        // Japan).
+        NSString *subString = [normalizedNationalNumber substringFromIndex:nationalPrefix.length];
+        NSError *aError = nil;
+        isValid = [self isValidNumber:[self parse:subString defaultRegion:regionCode error:&aError]];
+        
+        if (aError != nil)
             return NO;
-        }
     }
-    return NO;
+    return isValid;
 }
 
 
@@ -2192,22 +2157,8 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NBPhoneNumber*)getExampleNumber:(NSString*)regionCode error:(NSError *__autoreleasing *)error
 {
-    NBPhoneNumber *res = nil;
-    @try {
-        res = [self getExampleNumber:regionCode];
-    }
-    @catch (NSException *exception) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:exception.reason
-                                                             forKey:NSLocalizedDescriptionKey];
-        (*error) = [NSError errorWithDomain:exception.name code:0 userInfo:userInfo];
-    }
+    NBPhoneNumber *res = [self getExampleNumberForType:regionCode type:NBEPhoneNumberTypeFIXED_LINE error:error];
     return res;
-}
-
-
-- (NBPhoneNumber*)getExampleNumber:(NSString*)regionCode
-{
-    return [self getExampleNumberForType:regionCode type:NBEPhoneNumberTypeFIXED_LINE];
 }
 
 
@@ -2226,39 +2177,19 @@ static NSMutableDictionary *regexPatternCache;
 - (NBPhoneNumber*)getExampleNumberForType:(NSString*)regionCode type:(NBEPhoneNumberType)type error:(NSError *__autoreleasing *)error
 {
     NBPhoneNumber *res = nil;
-    @try {
-        res = [self getExampleNumberForType:regionCode type:type];
-    }
-    @catch (NSException *exception) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:exception.reason
-                                                             forKey:NSLocalizedDescriptionKey];
-        (*error) = [NSError errorWithDomain:exception.name code:0 userInfo:userInfo];
-    }
-    return res;
-}
-
-
-- (NBPhoneNumber*)getExampleNumberForType:(NSString*)regionCode type:(NBEPhoneNumberType)type
-{
-    // Check the region code is valid.
+    
     if ([self isValidRegionCode:regionCode] == NO)
     {
         return nil;
     }
-    
+
     NBPhoneNumberDesc *desc = [self getNumberDescByType:[self getMetadataForRegion:regionCode] type:type];
-    
-    @try {
-        if ([self hasValue:desc.exampleNumber ])
-        {
-            return [self parse:desc.exampleNumber defaultRegion:regionCode];
-        }
-    }
-    @catch (NSException *e)
+    if ([self hasValue:desc.exampleNumber ])
     {
+        return [self parse:desc.exampleNumber defaultRegion:regionCode error:error];
     }
-    
-    return nil;
+
+    return res;
 }
 
 
@@ -2276,36 +2207,20 @@ static NSMutableDictionary *regexPatternCache;
 - (NBPhoneNumber*)getExampleNumberForNonGeoEntity:(UInt32)countryCallingCode error:(NSError *__autoreleasing *)error
 {
     NBPhoneNumber *res = nil;
-    @try {
-        res = [self getExampleNumberForNonGeoEntity:countryCallingCode];
-    }
-    @catch (NSException *exception) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:exception.reason
-                                                             forKey:NSLocalizedDescriptionKey];
-        (*error) = [NSError errorWithDomain:exception.name code:0 userInfo:userInfo];
-    }
-    return res;
-}
 
-
-- (NBPhoneNumber*)getExampleNumberForNonGeoEntity:(UInt32)countryCallingCode
-{
     NBPhoneMetaData *metadata = [self getMetadataForNonGeographicalRegion:countryCallingCode];
     
     if (metadata != nil)
     {
         NBPhoneNumberDesc *desc = metadata.generalDesc;
-        @try {
-            if ([self hasValue:desc.exampleNumber])
-            {
-                NSString *callCode = [NSString stringWithFormat:@"+%u%@", (unsigned int)countryCallingCode, desc.exampleNumber];
-                return [self parse:callCode defaultRegion:UNKNOWN_REGION_];
-            }
-        }
-        @catch (NSException *e) {
+        if ([self hasValue:desc.exampleNumber])
+        {
+            NSString *callCode = [NSString stringWithFormat:@"+%u%@", (unsigned int)countryCallingCode, desc.exampleNumber];
+            return [self parse:callCode defaultRegion:UNKNOWN_REGION_ error:error];
         }
     }
-    return nil;
+    
+    return res;
 }
 
 
@@ -2324,8 +2239,7 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NSString*)maybeGetFormattedExtension:(NBPhoneNumber*)number metadata:(NBPhoneMetaData*)metadata numberFormat:(NBEPhoneNumberFormat)numberFormat
 {
-    if ([self hasValue:number.extension] == NO)
-    {
+    if ([self hasValue:number.extension] == NO) {
         return @"";
     }
     else
@@ -3081,30 +2995,9 @@ static NSMutableDictionary *regexPatternCache;
 {
     number = [NBPhoneNumberUtil normalizeNonBreakingSpace:number];
     
-    BOOL res = NO;
-    @try {
-        res = [self isPossibleNumberString:number regionDialingFrom:regionDialingFrom];
-    }
-    @catch (NSException *exception) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:exception.reason
-                                                             forKey:NSLocalizedDescriptionKey];
-        if (error != NULL)
-            (*error) = [NSError errorWithDomain:exception.name code:0 userInfo:userInfo];
-    }
+    BOOL res = [self isPossibleNumber:[self parse:number defaultRegion:regionDialingFrom error:error]];
     return res;
 }
-
-
-- (BOOL)isPossibleNumberString:(NSString*)number regionDialingFrom:(NSString*)regionDialingFrom
-{
-    @try {
-        return [self isPossibleNumber:[self parse:number defaultRegion:regionDialingFrom]];
-    }
-    @catch (NSException *e) {
-        return NO;
-    }
-}
-
 
 /**
  * Attempts to extract a valid number from a phone number that is too long to be
@@ -3665,28 +3558,9 @@ static NSMutableDictionary *regexPatternCache;
  *     viable phone number or if no default region was supplied and the number
  *     is not in international format (does not start with +).
  */
-- (NBPhoneNumber*)parse:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion
-{
-    numberToParse = [NBPhoneNumberUtil normalizeNonBreakingSpace:numberToParse];
-    
-    return [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:NO checkRegion:YES];
-}
-
-
 - (NBPhoneNumber*)parse:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion error:(NSError**)error
 {
-    NBPhoneNumber *phoneNumber = nil;
-    
-    @try {
-        phoneNumber = [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:NO checkRegion:YES];
-    }
-    @catch (NSException *exception) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:exception.reason
-                                                             forKey:NSLocalizedDescriptionKey];
-        if (error != NULL)
-            (*error) = [NSError errorWithDomain:exception.name code:0 userInfo:userInfo];
-    }
-    
+    NBPhoneNumber *phoneNumber = [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:NO checkRegion:YES error:error];
     return phoneNumber;
 }
 
@@ -3711,7 +3585,7 @@ static NSMutableDictionary *regexPatternCache;
         //TODO: if defaultRegion is unknown get defaultRegion other way
     }
         
-    return [self parse:numberToParse defaultRegion:defaultRegion];
+    return [self parse:numberToParse defaultRegion:defaultRegion error:error];
 }
 
 - (NSString *)countryCodeByCarrier
@@ -3746,32 +3620,17 @@ static NSMutableDictionary *regexPatternCache;
  */
 - (NBPhoneNumber*)parseAndKeepRawInput:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion error:(NSError**)error
 {
-    NBPhoneNumber *res = nil;
-    @try {
-        res = [self parseAndKeepRawInput:numberToParse defaultRegion:defaultRegion];
-    }
-    @catch (NSException *exception) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:exception.reason
-                                                             forKey:NSLocalizedDescriptionKey];
-        if (error != NULL)
-            (*error) = [NSError errorWithDomain:exception.name code:0 userInfo:userInfo];
-    }
-    return res;
-}
-
-- (NBPhoneNumber*)parseAndKeepRawInput:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion
-{
     if ([self isValidRegionCode:defaultRegion] == NO)
     {
         if (numberToParse.length > 0 && [numberToParse hasPrefix:@"+"] == NO)
         {
-            NSException* metaException = [NSException exceptionWithName:@"INVALID_COUNTRY_CODE"
-                                                                 reason:[NSString stringWithFormat:@"Invalid country code:%@", numberToParse]
-                                                               userInfo:nil];
-            @throw metaException;
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Invalid country code:%@", numberToParse]
+                                                                 forKey:NSLocalizedDescriptionKey];
+            if (error != NULL)
+                (*error) = [NSError errorWithDomain:@"INVALID_COUNTRY_CODE" code:0 userInfo:userInfo];
         }
     }
-    return [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:YES checkRegion:YES];
+    return [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:YES checkRegion:YES error:error];
 }
 
 
@@ -3799,31 +3658,21 @@ static NSMutableDictionary *regexPatternCache;
 - (NBPhoneNumber*)parseHelper:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion
                  keepRawInput:(BOOL)keepRawInput checkRegion:(BOOL)checkRegion error:(NSError**)error
 {
-    NBPhoneNumber *res = nil;
-    @try {
-        res = [self parseHelper:numberToParse defaultRegion:defaultRegion keepRawInput:keepRawInput checkRegion:checkRegion];
-    }
-    @catch (NSException *exception) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:exception.reason
-                                                             forKey:NSLocalizedDescriptionKey];
-        if (error != NULL)
-            (*error) = [NSError errorWithDomain:exception.name code:0 userInfo:userInfo];
-    }
-    return res;
-}
-
-- (NBPhoneNumber*)parseHelper:(NSString*)numberToParse defaultRegion:(NSString*)defaultRegion
-                 keepRawInput:(BOOL)keepRawInput checkRegion:(BOOL)checkRegion
-{
     numberToParse = [NBPhoneNumberUtil normalizeNonBreakingSpace:numberToParse];
     
     if (numberToParse == nil)
     {
-        @throw [NSException exceptionWithName:@"NOT_A_NUMBER" reason:[NSString stringWithFormat:@"NOT_A_NUMBER:%@", numberToParse] userInfo:nil];
+        if (error != NULL)
+            (*error) = [self errorWithObject:[NSString stringWithFormat:@"NOT_A_NUMBER:%@", numberToParse] withDomain:@"NOT_A_NUMBER"];
+        
+        return nil;
     }
     else if (numberToParse.length > MAX_INPUT_STRING_LENGTH_)
     {
-        @throw [NSException exceptionWithName:@"TOO_LONG" reason:[NSString stringWithFormat:@"TOO_LONG:%@", numberToParse] userInfo:nil];
+        if (error != NULL)
+            (*error) = [self errorWithObject:[NSString stringWithFormat:@"TOO_LONG:%@", numberToParse] withDomain:@"TOO_LONG"];
+        
+        return nil;
     }
     
     NSString *nationalNumber = @"";
@@ -3831,14 +3680,20 @@ static NSMutableDictionary *regexPatternCache;
     
     if ([self isViablePhoneNumber:nationalNumber] == NO)
     {
-        @throw [NSException exceptionWithName:@"NOT_A_NUMBER" reason:[NSString stringWithFormat:@"NOT_A_NUMBER:%@", nationalNumber] userInfo:nil];
+        if (error != NULL)
+            (*error) = [self errorWithObject:[NSString stringWithFormat:@"NOT_A_NUMBER:%@", nationalNumber] withDomain:@"NOT_A_NUMBER"];
+        
+        return nil;
     }
     
     // Check the region supplied is valid, or that the extracted number starts
     // with some sort of + sign so the number's region can be determined.
     if (checkRegion && [self checkRegionForParsing:nationalNumber defaultRegion:defaultRegion] == NO)
     {
-        @throw [NSException exceptionWithName:@"INVALID_COUNTRY_CODE" reason:[NSString stringWithFormat:@"INVALID_COUNTRY_CODE:%@", defaultRegion] userInfo:nil];
+        if (error != NULL)
+            (*error) = [self errorWithObject:[NSString stringWithFormat:@"INVALID_COUNTRY_CODE:%@", defaultRegion] withDomain:@"INVALID_COUNTRY_CODE"];
+        
+        return nil;
     }
     
     NBPhoneNumber *phoneNumber = [[NBPhoneNumber alloc] init];
@@ -3880,14 +3735,18 @@ static NSMutableDictionary *regexPatternCache;
                                             phoneNumber:&phoneNumber];
             if (countryCode == 0)
             {
-                @throw [NSException exceptionWithName:e.name
-                                               reason:[NSString stringWithFormat:@"%@:%@", e.name, nationalNumberStr]
-                                             userInfo:nil];
+                if (error != NULL)
+                    (*error) = [self errorWithObject:[NSString stringWithFormat:@"UnknownError:%@", nationalNumberStr] withDomain:@"UnknownError"];
+                
+                return nil;
             }
         }
         else
         {
-            @throw e;
+            if (error != NULL)
+                (*error) = [self errorWithObject:[NSString stringWithFormat:@"UnknownError:%@", nationalNumberStr] withDomain:@"UnknownError"];
+            
+            return nil;
         }
     }
     
@@ -3921,9 +3780,10 @@ static NSMutableDictionary *regexPatternCache;
     
     if (normalizedNationalNumber.length < MIN_LENGTH_FOR_NSN_)
     {
-        @throw [NSException exceptionWithName:@"TOO_SHORT_NSN"
-                                       reason:[NSString stringWithFormat:@"TOO_SHORT_NSN:%@", normalizedNationalNumber]
-                                     userInfo:nil];
+        if (error != NULL)
+            (*error) = [self errorWithObject:[NSString stringWithFormat:@"TOO_SHORT_NSN:%@", normalizedNationalNumber] withDomain:@"TOO_SHORT_NSN"];
+        
+        return nil;
     }
     
     if (regionMetadata != nil)
@@ -3942,16 +3802,18 @@ static NSMutableDictionary *regexPatternCache;
     unsigned int lengthOfNationalNumber = (unsigned int)normalizedNationalNumberStr.length;
     if (lengthOfNationalNumber < MIN_LENGTH_FOR_NSN_)
     {
-        @throw [NSException exceptionWithName:@"TOO_SHORT_NSN"
-                                       reason:[NSString stringWithFormat:@"TOO_SHORT_NSN:%@", normalizedNationalNumberStr]
-                                     userInfo:nil];
+        if (error != NULL)
+            (*error) = [self errorWithObject:[NSString stringWithFormat:@"TOO_SHORT_NSN:%@", normalizedNationalNumber] withDomain:@"TOO_SHORT_NSN"];
+        
+        return nil;
     }
     
     if (lengthOfNationalNumber > MAX_LENGTH_FOR_NSN_)
     {
-        @throw [NSException exceptionWithName:@"TOO_LONG"
-                                       reason:[NSString stringWithFormat:@"TOO_LONG:%@", normalizedNationalNumberStr]
-                                     userInfo:nil];
+        if (error != NULL)
+            (*error) = [self errorWithObject:[NSString stringWithFormat:@"TOO_LONG:%@", normalizedNationalNumber] withDomain:@"TOO_LONG"];
+        
+        return nil;
     }
     
     if ([normalizedNationalNumberStr hasPrefix:@"0"])
@@ -4086,11 +3948,10 @@ static NSMutableDictionary *regexPatternCache;
     {
         // First see if the first number has an implicit country calling code, by
         // attempting to parse it.
-        @try {
-            firstNumber = [self parse:firstNumberIn defaultRegion:UNKNOWN_REGION_];
-        }
-        @catch (NSException *e) {
-            if ([e.name isEqualToString:@"INVALID_COUNTRY_CODE"] == NO)
+        NSError *aError;
+        firstNumber = [self parse:firstNumberIn defaultRegion:UNKNOWN_REGION_ error:&aError];
+        if (aError != nil) {
+            if ([aError.domain isEqualToString:@"INVALID_COUNTRY_CODE"] == NO)
             {
                 return NBEMatchTypeNOT_A_NUMBER;
             }
@@ -4103,12 +3964,10 @@ static NSMutableDictionary *regexPatternCache;
                 NSString *secondNumberRegion = [self getRegionCodeForCountryCode:((NBPhoneNumber*)secondNumberIn).countryCode];
                 if (secondNumberRegion != UNKNOWN_REGION_)
                 {
-                    @try {
-                        firstNumber = [self parse:firstNumberIn defaultRegion:secondNumberRegion];
-                    }
-                    @catch (NSException *e2) {
+                    NSError *aNestedError;
+                    firstNumber = [self parse:firstNumberIn defaultRegion:secondNumberRegion error:&aNestedError];
+                    if (aNestedError != nil)
                         return NBEMatchTypeNOT_A_NUMBER;
-                    }
                     
                     NBEMatchType match = [self isNumberMatch:firstNumber second:secondNumberIn];
                     if (match == NBEMatchTypeEXACT_MATCH)
@@ -4120,35 +3979,29 @@ static NSMutableDictionary *regexPatternCache;
             }
             // If the second number is a string or doesn't have a valid country
             // calling code, we parse the first number without country calling code.
-            @try {
-                firstNumber = [self parseHelper:firstNumberIn defaultRegion:nil keepRawInput:NO checkRegion:NO];
-            }
-            @catch (NSException *e2)  {
+            NSError *aNestedError;
+            firstNumber = [self parseHelper:firstNumberIn defaultRegion:nil keepRawInput:NO checkRegion:NO error:&aNestedError];
+            if (aNestedError != nil) {
                 return NBEMatchTypeNOT_A_NUMBER;
             }
         }
-    }
-    else
-    {
+    } else {
         firstNumber = [firstNumberIn copy];
     }
     
-    if ([secondNumberIn isKindOfClass:[NSString class]])
-    {
-        @try {
-            secondNumber = [self parse:secondNumberIn defaultRegion:UNKNOWN_REGION_];
-            return [self isNumberMatch:firstNumberIn second:secondNumber];
-        }
-        @catch (NSException *e2) {
-            if ([e2.name isEqualToString:@"INVALID_COUNTRY_CODE"] == NO)
-            {
+    if ([secondNumberIn isKindOfClass:[NSString class]]) {
+        NSError *parseError;
+        secondNumber = [self parse:secondNumberIn defaultRegion:UNKNOWN_REGION_ error:&parseError];
+        if (parseError != nil) {
+            if ([parseError.domain isEqualToString:@"INVALID_COUNTRY_CODE"] == NO) {
                 return NBEMatchTypeNOT_A_NUMBER;
             }
             return [self isNumberMatch:secondNumberIn second:firstNumber];
+        } else {
+            return [self isNumberMatch:firstNumberIn second:secondNumber];
         }
     }
-    else
-    {
+    else {
         secondNumber = [secondNumberIn copy];
     }
     
@@ -4163,20 +4016,17 @@ static NSMutableDictionary *regexPatternCache;
     [secondNumber clearCountryCodeSource];
     secondNumber.PreferredDomesticCarrierCode = @"";
     
-    if (firstNumber.extension != nil && firstNumber.extension.length == 0)
-    {
+    if (firstNumber.extension != nil && firstNumber.extension.length == 0) {
         firstNumber.extension = nil;
     }
     
-    if (secondNumber.extension != nil && secondNumber.extension.length == 0)
-    {
+    if (secondNumber.extension != nil && secondNumber.extension.length == 0) {
         secondNumber.extension = nil;
     }
     
     // Early exit if both had extensions and these are different.
     if ([self hasValue:firstNumber.extension] && [self hasValue:secondNumber.extension] &&
-        [firstNumber.extension isEqualToString:secondNumber.extension] == NO)
-    {
+        [firstNumber.extension isEqualToString:secondNumber.extension] == NO) {
         return NBEMatchTypeNO_MATCH;
     }
     
@@ -4184,10 +4034,8 @@ static NSMutableDictionary *regexPatternCache;
     UInt32 secondNumberCountryCode = secondNumber.countryCode;
     
     // Both had country_code specified.
-    if (firstNumberCountryCode != 0 && secondNumberCountryCode != 0)
-    {
-        if ([firstNumber isEqual:secondNumber])
-        {
+    if (firstNumberCountryCode != 0 && secondNumberCountryCode != 0) {
+        if ([firstNumber isEqual:secondNumber]) {
             return NBEMatchTypeEXACT_MATCH;
         }
         else if (firstNumberCountryCode == secondNumberCountryCode && [self isNationalNumberSuffixOfTheOther:firstNumber second:secondNumber])
@@ -4207,13 +4055,11 @@ static NSMutableDictionary *regexPatternCache;
     firstNumber.countryCode = 0;
     secondNumber.countryCode = 0;
     // If all else was the same, then this is an NSN_MATCH.
-    if ([firstNumber isEqual:secondNumber])
-    {
+    if ([firstNumber isEqual:secondNumber]) {
         return NBEMatchTypeNSN_MATCH;
     }
     
-    if ([self isNationalNumberSuffixOfTheOther:firstNumber second:secondNumber])
-    {
+    if ([self isNationalNumberSuffixOfTheOther:firstNumber second:secondNumber]) {
         return NBEMatchTypeSHORT_NSN_MATCH;
     }
     return NBEMatchTypeNO_MATCH;
