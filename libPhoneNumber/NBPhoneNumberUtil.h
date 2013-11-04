@@ -67,7 +67,7 @@ extern NSString * const REGION_CODE_FOR_NON_GEO_ENTITY;
 
 - (BOOL)canBeInternationallyDialled:(NBPhoneNumber*)number error:(NSError**)error;
 
-- (BOOL)truncateTooLongNumber:(NBPhoneNumber*)number error:(NSError**)error;
+- (BOOL)truncateTooLongNumber:(NBPhoneNumber*)number;
 
 - (BOOL)isValidNumber:(NBPhoneNumber*)number;
 - (BOOL)isViablePhoneNumber:(NSString*)phoneNumber;
@@ -86,8 +86,9 @@ extern NSString * const REGION_CODE_FOR_NON_GEO_ENTITY;
 - (int)getLengthOfGeographicalAreaCode:(NBPhoneNumber*)phoneNumber error:(NSError**)error;
 - (int)getLengthOfNationalDestinationCode:(NBPhoneNumber*)phoneNumber error:(NSError**)error;
 
-- (BOOL)maybeStripNationalPrefixAndCarrierCode:(NSString**)numberStr metadata:(NBPhoneMetaData*)metadata carrierCode:(NSString**)carrierCode error:(NSError**)error;
-- (NBECountryCodeSource)maybeStripInternationalPrefixAndNormalize:(NSString**)numberStr possibleIddPrefix:(NSString*)possibleIddPrefix error:(NSError**)error;
+- (BOOL)maybeStripNationalPrefixAndCarrierCode:(NSString**)numberStr metadata:(NBPhoneMetaData*)metadata carrierCode:(NSString**)carrierCode;
+- (NBECountryCodeSource)maybeStripInternationalPrefixAndNormalize:(NSString**)numberStr possibleIddPrefix:(NSString*)possibleIddPrefix;
+
 - (UInt32)maybeExtractCountryCode:(NSString*)number metadata:(NBPhoneMetaData*)defaultRegionMetadata
                    nationalNumber:(NSString**)nationalNumber keepRawInput:(BOOL)keepRawInput phoneNumber:(NBPhoneNumber**)phoneNumber error:(NSError**)error;
 
