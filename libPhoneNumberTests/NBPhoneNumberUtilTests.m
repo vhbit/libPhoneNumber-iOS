@@ -21,14 +21,11 @@
 - (BOOL)truncateTooLongNumber:(NBPhoneNumber*)number;
 - (NBEValidationResult)isPossibleNumberWithReason:(NBPhoneNumber*)number;
 - (BOOL)isPossibleNumber:(NBPhoneNumber*)number;
-- (BOOL)isPossibleNumberString:(NSString*)number regionDialingFrom:(NSString*)regionDialingFrom;
 - (NBEMatchType)isNumberMatch:(id)firstNumberIn second:(id)secondNumberIn;
 - (int)getLengthOfGeographicalAreaCode:(NBPhoneNumber*)phoneNumber;
 - (int)getLengthOfNationalDestinationCode:(NBPhoneNumber*)phoneNumber;
 - (BOOL)maybeStripNationalPrefixAndCarrierCode:(NSString**)numberStr metadata:(NBPhoneMetaData*)metadata carrierCode:(NSString**)carrierCode;
 - (NBECountryCodeSource)maybeStripInternationalPrefixAndNormalize:(NSString**)numberStr possibleIddPrefix:(NSString*)possibleIddPrefix;
-- (UInt32)maybeExtractCountryCode:(NSString*)number metadata:(NBPhoneMetaData*)defaultRegionMetadata
-                   nationalNumber:(NSString**)nationalNumber keepRawInput:(BOOL)keepRawInput phoneNumber:(NBPhoneNumber**)phoneNumber;
 - (NSString*)format:(NBPhoneNumber*)phoneNumber numberFormat:(NBEPhoneNumberFormat)numberFormat;
 - (NSString*)formatByPattern:(NBPhoneNumber*)number numberFormat:(NBEPhoneNumberFormat)numberFormat userDefinedFormats:(NSArray*)userDefinedFormats;
 - (NSString*)formatNumberForMobileDialing:(NBPhoneNumber*)number regionCallingFrom:(NSString*)regionCallingFrom withFormatting:(BOOL)withFormatting;
@@ -1440,16 +1437,16 @@
         STAssertTrue([phoneUtil isPossibleNumber:GB_NUMBER], nil);
         STAssertTrue([phoneUtil isPossibleNumber:INTERNATIONAL_TOLL_FREE], nil);
         
-        STAssertTrue([phoneUtil isPossibleNumberString:@"+1 650 253 0000" regionDialingFrom:@"US"], nil);
-        STAssertTrue([phoneUtil isPossibleNumberString:@"+1 650 GOO OGLE" regionDialingFrom:@"US"], nil);
-        STAssertTrue([phoneUtil isPossibleNumberString:@"(650) 253-0000" regionDialingFrom:@"US"], nil);
-        STAssertTrue([phoneUtil isPossibleNumberString:@"253-0000" regionDialingFrom:@"US"], nil);
-        STAssertTrue([phoneUtil isPossibleNumberString:@"+1 650 253 0000" regionDialingFrom:@"GB"], nil);
-        STAssertTrue([phoneUtil isPossibleNumberString:@"+44 20 7031 3000" regionDialingFrom:@"GB"], nil);
-        STAssertTrue([phoneUtil isPossibleNumberString:@"(020) 7031 3000" regionDialingFrom:@"GB"], nil);
-        STAssertTrue([phoneUtil isPossibleNumberString:@"7031 3000" regionDialingFrom:@"GB"], nil);
-        STAssertTrue([phoneUtil isPossibleNumberString:@"3331 6005" regionDialingFrom:@"NZ"], nil);
-        STAssertTrue([phoneUtil isPossibleNumberString:@"+800 1234 5678" regionDialingFrom:@"001"], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"+1 650 253 0000" regionDialingFrom:@"US" error:nil], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"+1 650 GOO OGLE" regionDialingFrom:@"US" error:nil], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"(650) 253-0000" regionDialingFrom:@"US" error:nil], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"253-0000" regionDialingFrom:@"US" error:nil], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"+1 650 253 0000" regionDialingFrom:@"GB" error:nil], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"+44 20 7031 3000" regionDialingFrom:@"GB" error:nil], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"(020) 7031 3000" regionDialingFrom:@"GB" error:nil], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"7031 3000" regionDialingFrom:@"GB" error:nil], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"3331 6005" regionDialingFrom:@"NZ" error:nil], nil);
+        STAssertTrue([phoneUtil isPossibleNumberString:@"+800 1234 5678" regionDialingFrom:@"001" error:nil], nil);
     }
     
 
@@ -1508,13 +1505,13 @@
         [number setCountryCode:44];
         [number setNationalNumber:300];
         STAssertFalse([phoneUtil isPossibleNumber:number], nil);
-        STAssertFalse([phoneUtil isPossibleNumberString:@"+1 650 253 00000" regionDialingFrom:@"US"], nil);
-        STAssertFalse([phoneUtil isPossibleNumberString:@"(650) 253-00000" regionDialingFrom:@"US"], nil);
-        STAssertFalse([phoneUtil isPossibleNumberString:@"I want a Pizza" regionDialingFrom:@"US"], nil);
-        STAssertFalse([phoneUtil isPossibleNumberString:@"253-000" regionDialingFrom:@"US"], nil);
-        STAssertFalse([phoneUtil isPossibleNumberString:@"1 3000" regionDialingFrom:@"GB"], nil);
-        STAssertFalse([phoneUtil isPossibleNumberString:@"+44 300" regionDialingFrom:@"GB"], nil);
-        STAssertFalse([phoneUtil isPossibleNumberString:@"+800 1234 5678 9" regionDialingFrom:@"001"], nil);
+        STAssertFalse([phoneUtil isPossibleNumberString:@"+1 650 253 00000" regionDialingFrom:@"US" error:nil], nil);
+        STAssertFalse([phoneUtil isPossibleNumberString:@"(650) 253-00000" regionDialingFrom:@"US" error:nil], nil);
+        STAssertFalse([phoneUtil isPossibleNumberString:@"I want a Pizza" regionDialingFrom:@"US" error:nil], nil);
+        STAssertFalse([phoneUtil isPossibleNumberString:@"253-000" regionDialingFrom:@"US" error:nil], nil);
+        STAssertFalse([phoneUtil isPossibleNumberString:@"1 3000" regionDialingFrom:@"GB" error:nil], nil);
+        STAssertFalse([phoneUtil isPossibleNumberString:@"+44 300" regionDialingFrom:@"GB" error:nil], nil);
+        STAssertFalse([phoneUtil isPossibleNumberString:@"+800 1234 5678 9" regionDialingFrom:@"001" error:nil], nil);
     }
 
 
@@ -1769,14 +1766,14 @@
         NSString *numberToFill = @"";
 
         {
+            NSError *aError = nil;
             STAssertEquals(countryCallingCode, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
-                                                                   nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number], nil);
+                                                                   nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number error:&aError], nil);
             STAssertEquals(NBECountryCodeSourceFROM_NUMBER_WITH_IDD, [number.countryCodeSource intValue], nil);
             // Should strip and normalize national significant number.
             STAssertEqualObjects(strippedNumber, numberToFill, nil);
-        }
-        @catch (NSException *e) {
-            STFail([@"Should not have thrown an exception: " stringByAppendingString:e.reason]);
+            if (aError)
+                STFail([@"Should not have thrown an exception: " stringByAppendingString:aError.description]);
         }
         STAssertEquals(NBECountryCodeSourceFROM_NUMBER_WITH_IDD, [number.countryCodeSource intValue], @"Did not figure out CountryCodeSource correctly");
         // Should strip and normalize national significant number.
@@ -1787,7 +1784,7 @@
         countryCallingCode = 64;
         numberToFill = @"";
         STAssertEquals(countryCallingCode, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
-                                                                     nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number], nil);
+                                                                     nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number error:nil], nil);
         STAssertEquals(NBECountryCodeSourceFROM_NUMBER_WITH_PLUS_SIGN, [number.countryCodeSource intValue], @"Did not figure out CountryCodeSource correctly");
         
         number = [[NBPhoneNumber alloc] init];
@@ -1795,14 +1792,14 @@
         countryCallingCode = 800;
         numberToFill = @"";
         STAssertEquals(countryCallingCode, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
-                                                 nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number], nil);
+                                                 nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number error:nil], nil);
         STAssertEquals(NBECountryCodeSourceFROM_NUMBER_WITH_PLUS_SIGN, [number.countryCodeSource intValue], @"Did not figure out CountryCodeSource correctly");
         
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"2345-6789";
         numberToFill = @"";
         STAssertEquals((UInt32)0, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
-                                                 nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number], nil);
+                                                 nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number error:nil], nil);
         STAssertEquals(NBECountryCodeSourceFROM_DEFAULT_COUNTRY, [number.countryCodeSource intValue], @"Did not figure out CountryCodeSource correctly");
 
                                  
@@ -1810,13 +1807,13 @@
         phoneNumber = @"0119991123456789";
         numberToFill = @"";
         {
+            NSError *aError = nil;
             [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
-                                nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number];
-            STFail(@"Should have thrown an exception, no valid country calling code present.");
-        }
-        @catch (NSException *exception) {
-            // Expected.
-            STAssertEqualObjects(@"INVALID_COUNTRY_CODE", exception.name, nil);
+                                nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number error:&aError];
+            if (aError == nil)
+                STFail(@"Should have thrown an exception, no valid country calling code present.");
+            else // Expected.
+                STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, nil);
         }
         
         number = [[NBPhoneNumber alloc] init];
@@ -1824,49 +1821,41 @@
         countryCallingCode = 1;
         numberToFill = @"";
         {
+            NSError *aError = nil;
             STAssertEquals(countryCallingCode, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
-                                                                         nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number],
+                                                                         nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number error:&aError],
                                  @"Should have extracted the country calling code of the region passed in");
             STAssertEquals(NBECountryCodeSourceFROM_NUMBER_WITHOUT_PLUS_SIGN, [number.countryCodeSource intValue], @"Did not figure out CountryCodeSource correctly");
         }
-        @catch (NSException *exception) {
-            NSLog(@"%@", exception.reason);
-        }
         
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"(1 610) 619 4466";
         countryCallingCode = 1;
         numberToFill = @"";
         {
+            NSError *aError = nil;
             STAssertEquals(countryCallingCode, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
-                                                                            nationalNumber:&numberToFill keepRawInput:NO phoneNumber:&number], nil);
-        }
-        @catch (NSException *exception) {
-            NSLog(@"%@", exception.reason);
+                                                                            nationalNumber:&numberToFill keepRawInput:NO phoneNumber:&number error:&aError], nil);
         }
                 
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"(1 610) 619 446";
         numberToFill = @"";
         {
+            NSError *aError = nil;
             STAssertEquals((UInt32)0, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
-                                                        nationalNumber:&numberToFill keepRawInput:NO phoneNumber:&number], nil);
+                                                        nationalNumber:&numberToFill keepRawInput:NO phoneNumber:&number error:&aError], nil);
             STAssertFalse(number.countryCodeSource != nil, @"Should not contain CountryCodeSource.");
-        }
-        @catch (NSException *exception) {
-            NSLog(@"%@", exception.reason);
         }
         
         number = [[NBPhoneNumber alloc] init];
         phoneNumber = @"(1 610) 619";
         numberToFill = @"";
         {
+            NSError *aError = nil;
             STAssertEquals((UInt32)0, [phoneUtil maybeExtractCountryCode:phoneNumber metadata:metadata
-                                                           nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number], nil);
+                                                           nationalNumber:&numberToFill keepRawInput:YES phoneNumber:&number error:&aError], nil);
             STAssertEquals(NBECountryCodeSourceFROM_DEFAULT_COUNTRY, [number.countryCodeSource intValue], nil);
-        }
-        @catch (NSException *exception) {
-            NSLog(@"%@", exception.reason);
         }
     }
 
@@ -2173,202 +2162,227 @@
             NSError *aError = nil;
             NSString *sentencePhoneNumber = @"1 MICROSOFT";
             [phoneUtil parse:sentencePhoneNumber defaultRegion:@"NZ" error:&aError];
-            STFail([@"This should not parse without throwing an exception " stringByAppendingString:sentencePhoneNumber]);
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
+            
+            if (aError == nil)
+                STFail([@"This should not parse without throwing an exception " stringByAppendingString:sentencePhoneNumber]);
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
         }
                    
         {
             NSError *aError = nil;
             NSString *sentencePhoneNumber = @"12 MICROSOFT";
             [phoneUtil parse:sentencePhoneNumber defaultRegion:@"NZ" error:&aError];
-            STFail([@"This should not parse without throwing an exception " stringByAppendingString:sentencePhoneNumber]);
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
+            
+            if (aError == nil)
+                STFail([@"This should not parse without throwing an exception " stringByAppendingString:sentencePhoneNumber]);
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
         }
                    
         {
             NSError *aError = nil;
             NSString *tooLongPhoneNumber = @"01495 72553301873 810104";
             [phoneUtil parse:tooLongPhoneNumber defaultRegion:@"GB" error:&aError];
-            STFail([@"This should not parse without throwing an exception " stringByAppendingString:tooLongPhoneNumber]);
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"TOO_LONG", aError.domain, @"Wrong error type stored in exception.");
+            
+            if (aError == nil)
+                STFail([@"This should not parse without throwing an exception " stringByAppendingString:tooLongPhoneNumber]);
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"TOO_LONG", aError.domain, @"Wrong error type stored in exception.");
         }
                    
         {
             NSError *aError = nil;
             NSString *plusMinusPhoneNumber = @"+---";
             [phoneUtil parse:plusMinusPhoneNumber defaultRegion:@"DE" error:&aError];
-            STFail([@"This should not parse without throwing an exception "stringByAppendingString:plusMinusPhoneNumber]);
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
+            
+            if (aError == nil)
+                STFail([@"This should not parse without throwing an exception "stringByAppendingString:plusMinusPhoneNumber]);
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
         }
                    
         {
             NSError *aError = nil;
             NSString *plusStar = @"+***";
             [phoneUtil parse:plusStar defaultRegion:@"DE" error:&aError];
-            STFail([@"This should not parse without throwing an exception "stringByAppendingString:plusStar]);
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
+            if (aError == nil)
+                STFail([@"This should not parse without throwing an exception "stringByAppendingString:plusStar]);
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *plusStarPhoneNumber = @"+*******91";
             [phoneUtil parse:plusStarPhoneNumber defaultRegion:@"DE" error:&aError];
-            STFail([@"This should not parse without throwing an exception "stringByAppendingString:plusStarPhoneNumber]);
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
+            if (aError == nil)
+                STFail([@"This should not parse without throwing an exception "stringByAppendingString:plusStarPhoneNumber]);
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *tooShortPhoneNumber = @"+49 0";
             [phoneUtil parse:tooShortPhoneNumber defaultRegion:@"DE" error:&aError];
-            STFail([@"This should not parse without throwing an exception "stringByAppendingString:tooShortPhoneNumber]);
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"TOO_SHORT_NSN", aError.domain, @"Wrong error type stored in exception.");
+            if (aError == nil)
+                STFail([@"This should not parse without throwing an exception "stringByAppendingString:tooShortPhoneNumber]);
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"TOO_SHORT_NSN", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *invalidcountryCode = @"+210 3456 56789";
             [phoneUtil parse:invalidcountryCode defaultRegion:@"NZ" error:&aError];
-            STFail([@"This is not a recognised region code: should fail: " stringByAppendingString:invalidcountryCode]);
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            if (aError == nil)
+                STFail([@"This is not a recognised region code: should fail: " stringByAppendingString:invalidcountryCode]);
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *plusAndIddAndInvalidcountryCode = @"+ 00 210 3 331 6005";
-            [phoneUtil parse:plusAndIddAndInvalidcountryCode defaultRegion:@"NZ"];
-            STFail(@"This should not parse without throwing an exception.");
-        
-            // Expected this exception. 00 is a correct IDD, but 210 is not a valid
-            // country code.
-            STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:plusAndIddAndInvalidcountryCode defaultRegion:@"NZ" error:&aError];
+            if (aError == nil)
+                STFail(@"This should not parse without throwing an exception.");
+            else {
+                // Expected this exception. 00 is a correct IDD, but 210 is not a valid
+                // country code.
+                STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            }
         }
                    
         {
             NSError *aError = nil;
             NSString *someNumber = @"123 456 7890";
-            [phoneUtil parse:someNumber defaultRegion:@"ZZ"];
-            STFail(@"Unknown region code not allowed: should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:someNumber defaultRegion:@"ZZ" error:&aError];
+            if (aError == nil)
+                STFail(@"Unknown region code not allowed: should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *someNumber = @"123 456 7890";
-            [phoneUtil parse:someNumber defaultRegion:@"CS"];
-            STFail(@"Deprecated region code not allowed: should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:someNumber defaultRegion:@"CS" error:&aError];
+            if (aError == nil)
+                STFail(@"Deprecated region code not allowed: should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *someNumber = @"123 456 7890";
-            [phoneUtil parse:someNumber defaultRegion:nil];
-            STFail(@"nil region code not allowed: should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:someNumber defaultRegion:nil error:&aError];
+            if (aError == nil)
+                STFail(@"nil region code not allowed: should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
         }
         
         
         {
             NSError *aError = nil;
             NSString *someNumber = @"0044------";
-            [phoneUtil parse:someNumber defaultRegion:@"GB"];
-            STFail(@"No number provided, only region code: should fail");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"TOO_SHORT_AFTER_IDD", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:someNumber defaultRegion:@"GB" error:&aError];
+            if (aError == nil)
+                STFail(@"No number provided, only region code: should fail");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"TOO_SHORT_AFTER_IDD", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *someNumber = @"0044";
-            [phoneUtil parse:someNumber defaultRegion:@"GB"];
-            STFail(@"No number provided, only region code: should fail");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"TOO_SHORT_AFTER_IDD", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:someNumber defaultRegion:@"GB" error:&aError];
+            if (aError == nil)
+                STFail(@"No number provided, only region code: should fail");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"TOO_SHORT_AFTER_IDD", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *someNumber = @"011";
-            [phoneUtil parse:someNumber defaultRegion:@"US"];
-            STFail(@"Only IDD provided - should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"TOO_SHORT_AFTER_IDD", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:someNumber defaultRegion:@"US" error:&aError];
+            if (aError == nil)
+                STFail(@"Only IDD provided - should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"TOO_SHORT_AFTER_IDD", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *someNumber = @"0119";
-            [phoneUtil parse:someNumber defaultRegion:@"US"];
-            STFail(@"Only IDD provided and then 9 - should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"TOO_SHORT_AFTER_IDD", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:someNumber defaultRegion:@"US" error:&aError];
+            if (aError == nil)
+                STFail(@"Only IDD provided and then 9 - should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"TOO_SHORT_AFTER_IDD", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *emptyNumber = @"";
             // Invalid region.
-            [phoneUtil parse:emptyNumber defaultRegion:@"ZZ"];
-            STFail(@"Empty string - should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:emptyNumber defaultRegion:@"ZZ" error:&aError];
+            if (aError == nil)
+                STFail(@"Empty string - should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             // Invalid region.
-            [phoneUtil parse:nil defaultRegion:@"ZZ"];
-            STFail(@"nil string - should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:nil defaultRegion:@"ZZ" error:&aError];
+            if (aError == nil)
+                STFail(@"nil string - should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
-            [phoneUtil parse:nil defaultRegion:@"US"];
-            STFail(@"nil string - should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:nil defaultRegion:@"US" error:&aError];
+            if (aError == nil)
+                STFail(@"nil string - should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"NOT_A_NUMBER", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
             NSError *aError = nil;
             NSString *domainRfcPhoneContext = @"tel:555-1234;phone-context=www.google.com";
-            [phoneUtil parse:domainRfcPhoneContext defaultRegion:@"ZZ"];
-            STFail(@"Unknown region code not allowed: should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:domainRfcPhoneContext defaultRegion:@"ZZ" error:&aError];
+            if (aError == nil)
+                STFail(@"Unknown region code not allowed: should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
         }
         
         {
@@ -2377,11 +2391,12 @@
             // This should not succeed in being parsed.
             
             NSString *invalidRfcPhoneContext = @"tel:555-1234;phone-context=1-331";
-            [phoneUtil parse:invalidRfcPhoneContext defaultRegion:@"ZZ"];
-            STFail(@"Unknown region code not allowed: should fail.");
-        
-            // Expected this exception.
-            STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            [phoneUtil parse:invalidRfcPhoneContext defaultRegion:@"ZZ" error:&aError];
+            if (aError == nil)
+                STFail(@"Unknown region code not allowed: should fail.");
+            else
+                // Expected this exception.
+                STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
         }
     }
     
@@ -2392,19 +2407,19 @@
         NSError *aError;
         // @"ZZ is allowed only if the number starts with a '+' - then the
         // country calling code can be calculated.
-        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"+64 3 331 6005" defaultRegion:@"ZZ"]], nil);
+        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"+64 3 331 6005" defaultRegion:@"ZZ" error:&aError]], nil);
         // Test with full-width plus.
-        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"\uFF0B64 3 331 6005" defaultRegion:@"ZZ"]], nil);
+        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"\uFF0B64 3 331 6005" defaultRegion:@"ZZ" error:&aError]], nil);
         // Test with normal plus but leading characters that need to be stripped.
-        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"Tel: +64 3 331 6005" defaultRegion:@"ZZ"]], nil);
-        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"+64 3 331 6005" defaultRegion:nil]], nil);
-        STAssertTrue([INTERNATIONAL_TOLL_FREE isEqual:[phoneUtil parse:@"+800 1234 5678" defaultRegion:nil]], nil);
-        STAssertTrue([UNIVERSAL_PREMIUM_RATE isEqual:[phoneUtil parse:@"+979 123 456 789" defaultRegion:nil]], nil);
+        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"Tel: +64 3 331 6005" defaultRegion:@"ZZ" error:&aError]], nil);
+        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"+64 3 331 6005" defaultRegion:nil error:&aError]], nil);
+        STAssertTrue([INTERNATIONAL_TOLL_FREE isEqual:[phoneUtil parse:@"+800 1234 5678" defaultRegion:nil error:&aError]], nil);
+        STAssertTrue([UNIVERSAL_PREMIUM_RATE isEqual:[phoneUtil parse:@"+979 123 456 789" defaultRegion:nil error:&aError]], nil);
         
         // Test parsing RFC3966 format with a phone context.
-        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"tel:03-331-6005;phone-context=+64" defaultRegion:@"ZZ"]], nil);
-        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"  tel:03-331-6005;phone-context=+64" defaultRegion:@"ZZ"]], nil);
-        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"tel:03-331-6005;isub=12345;phone-context=+64" defaultRegion:@"ZZ"]], nil);
+        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"tel:03-331-6005;phone-context=+64" defaultRegion:@"ZZ" error:&aError]], nil);
+        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"  tel:03-331-6005;phone-context=+64" defaultRegion:@"ZZ" error:&aError]], nil);
+        STAssertTrue([NZ_NUMBER isEqual:[phoneUtil parse:@"tel:03-331-6005;isub=12345;phone-context=+64" defaultRegion:@"ZZ" error:&aError]], nil);
         
         // It is important that we set the carrier code to an empty string, since we
         // used ParseAndKeepRawInput and no carrier code was found.
@@ -2421,27 +2436,28 @@
 
     #pragma mark - testParseExtensions
     {
+        NSError *aError = nil;
         NSLog(@"-------------- testParseExtensions");
         NBPhoneNumber *nzNumber = [[NBPhoneNumber alloc] init];
         [nzNumber setCountryCode:64];
         [nzNumber setNationalNumber:33316005];
         [nzNumber setExtension:@"3456"];
-        STAssertTrue([nzNumber isEqual:[phoneUtil parse:@"03 331 6005 ext 3456" defaultRegion:@"NZ"]], nil);
-        STAssertTrue([nzNumber isEqual:[phoneUtil parse:@"03-3316005x3456" defaultRegion:@"NZ"]], nil);
-        STAssertTrue([nzNumber isEqual:[phoneUtil parse:@"03-3316005 int.3456" defaultRegion:@"NZ"]], nil);
-        STAssertTrue([nzNumber isEqual:[phoneUtil parse:@"03 3316005 #3456" defaultRegion:@"NZ"]], nil);
+        STAssertTrue([nzNumber isEqual:[phoneUtil parse:@"03 331 6005 ext 3456" defaultRegion:@"NZ" error:&aError]], nil);
+        STAssertTrue([nzNumber isEqual:[phoneUtil parse:@"03-3316005x3456" defaultRegion:@"NZ" error:&aError]], nil);
+        STAssertTrue([nzNumber isEqual:[phoneUtil parse:@"03-3316005 int.3456" defaultRegion:@"NZ" error:&aError]], nil);
+        STAssertTrue([nzNumber isEqual:[phoneUtil parse:@"03 3316005 #3456" defaultRegion:@"NZ" error:&aError]], nil);
         
         // Test the following do not extract extensions:
-        STAssertTrue([ALPHA_NUMERIC_NUMBER isEqual:[phoneUtil parse:@"1800 six-flags" defaultRegion:@"US"]], nil);
-        STAssertTrue([ALPHA_NUMERIC_NUMBER isEqual:[phoneUtil parse:@"1800 SIX FLAGS" defaultRegion:@"US"]], nil);
-        STAssertTrue([ALPHA_NUMERIC_NUMBER isEqual:[phoneUtil parse:@"0~0 1800 7493 5247" defaultRegion:@"PL"]], nil);
-        STAssertTrue([ALPHA_NUMERIC_NUMBER isEqual:[phoneUtil parse:@"(1800) 7493.5247" defaultRegion:@"US"]], nil);
+        STAssertTrue([ALPHA_NUMERIC_NUMBER isEqual:[phoneUtil parse:@"1800 six-flags" defaultRegion:@"US" error:&aError]], nil);
+        STAssertTrue([ALPHA_NUMERIC_NUMBER isEqual:[phoneUtil parse:@"1800 SIX FLAGS" defaultRegion:@"US" error:&aError]], nil);
+        STAssertTrue([ALPHA_NUMERIC_NUMBER isEqual:[phoneUtil parse:@"0~0 1800 7493 5247" defaultRegion:@"PL" error:&aError]], nil);
+        STAssertTrue([ALPHA_NUMERIC_NUMBER isEqual:[phoneUtil parse:@"(1800) 7493.5247" defaultRegion:@"US" error:&aError]], nil);
         
         // Check that the last instance of an extension token is matched.
         
         id extnNumber = [ALPHA_NUMERIC_NUMBER copy];
         [extnNumber setExtension:@"1234"];
-        STAssertTrue([extnNumber isEqual:[phoneUtil parse:@"0~0 1800 7493 5247 ~1234" defaultRegion:@"PL"]], nil);
+        STAssertTrue([extnNumber isEqual:[phoneUtil parse:@"0~0 1800 7493 5247 ~1234" defaultRegion:@"PL" error:&aError]], nil);
         
         // Verifying bug-fix where the last digit of a number was previously omitted
         // if it was a 0 when extracting the extension. Also verifying a few different
@@ -2451,46 +2467,46 @@
         [ukNumber setCountryCode:44];
         [ukNumber setNationalNumber:2034567890];
         [ukNumber setExtension:@"456"];
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890x456" defaultRegion:@"NZ"]], nil);
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890x456" defaultRegion:@"GB"]], nil);
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 x456" defaultRegion:@"GB"]], nil);
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 X456" defaultRegion:@"GB"]], nil);
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 X 456" defaultRegion:@"GB"]], nil);
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 X  456" defaultRegion:@"GB"]], nil);
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 x 456  " defaultRegion:@"GB"]], nil);
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890  X 456" defaultRegion:@"GB"]], nil);
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44-2034567890;ext=456" defaultRegion:@"GB"]], nil);
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"tel:2034567890;ext=456;phone-context=+44" defaultRegion:@"ZZ"]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890x456" defaultRegion:@"NZ" error:&aError]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890x456" defaultRegion:@"GB" error:&aError]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 x456" defaultRegion:@"GB" error:&aError]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 X456" defaultRegion:@"GB" error:&aError]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 X 456" defaultRegion:@"GB" error:&aError]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 X  456" defaultRegion:@"GB" error:&aError]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890 x 456  " defaultRegion:@"GB" error:&aError]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44 2034567890  X 456" defaultRegion:@"GB" error:&aError]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+44-2034567890;ext=456" defaultRegion:@"GB" error:&aError]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"tel:2034567890;ext=456;phone-context=+44" defaultRegion:@"ZZ" error:&aError]], nil);
         // Full-width extension, @"extn' only.
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+442034567890\uFF45\uFF58\uFF54\uFF4E456" defaultRegion:@"GB"]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+442034567890\uFF45\uFF58\uFF54\uFF4E456" defaultRegion:@"GB" error:&aError]], nil);
         // 'xtn' only.
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+442034567890\uFF58\uFF54\uFF4E456" defaultRegion:@"GB"]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+442034567890\uFF58\uFF54\uFF4E456" defaultRegion:@"GB" error:&aError]], nil);
         // 'xt' only.
-        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+442034567890\uFF58\uFF54456" defaultRegion:@"GB"]], nil);
+        STAssertTrue([ukNumber isEqual:[phoneUtil parse:@"+442034567890\uFF58\uFF54456" defaultRegion:@"GB" error:&aError]], nil);
         
         id usWithExtension = [[NBPhoneNumber alloc] init];
         [usWithExtension setCountryCode:1];
         [usWithExtension setNationalNumber:8009013355];
         [usWithExtension setExtension:@"7246433"];
-        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 x 7246433" defaultRegion:@"US"]], nil);
-        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 , ext 7246433" defaultRegion:@"US"]], nil);
-        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 ,extension 7246433" defaultRegion:@"US"]], nil);
-        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 ,extensi\u00F3n 7246433" defaultRegion:@"US"]], nil);
+        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 x 7246433" defaultRegion:@"US" error:&aError]], nil);
+        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 , ext 7246433" defaultRegion:@"US" error:&aError]], nil);
+        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 ,extension 7246433" defaultRegion:@"US" error:&aError]], nil);
+        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 ,extensi\u00F3n 7246433" defaultRegion:@"US" error:&aError]], nil);
         
         // Repeat with the small letter o with acute accent created by combining
         // characters.
-        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 ,extensio\u0301n 7246433" defaultRegion:@"US"]], nil);
-        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 , 7246433" defaultRegion:@"US"]], nil);
-        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 ext: 7246433" defaultRegion:@"US"]], nil);
+        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 ,extensio\u0301n 7246433" defaultRegion:@"US" error:&aError]], nil);
+        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 , 7246433" defaultRegion:@"US" error:&aError]], nil);
+        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"(800) 901-3355 ext: 7246433" defaultRegion:@"US" error:&aError]], nil);
         
         // Test that if a number has two extensions specified, we ignore the second.
         id usWithTwoExtensionsNumber = [[NBPhoneNumber alloc] init];
         [usWithTwoExtensionsNumber setCountryCode:1];
         [usWithTwoExtensionsNumber setNationalNumber:2121231234];
         [usWithTwoExtensionsNumber setExtension:@"508"];
-        STAssertTrue([usWithTwoExtensionsNumber isEqual:[phoneUtil parse:@"(212)123-1234 x508/x1234" defaultRegion:@"US"]], nil);
-        STAssertTrue([usWithTwoExtensionsNumber isEqual:[phoneUtil parse:@"(212)123-1234 x508/ x1234" defaultRegion:@"US"]], nil);
-        STAssertTrue([usWithTwoExtensionsNumber isEqual:[phoneUtil parse:@"(212)123-1234 x508\\x1234" defaultRegion:@"US"]], nil);
+        STAssertTrue([usWithTwoExtensionsNumber isEqual:[phoneUtil parse:@"(212)123-1234 x508/x1234" defaultRegion:@"US" error:&aError]], nil);
+        STAssertTrue([usWithTwoExtensionsNumber isEqual:[phoneUtil parse:@"(212)123-1234 x508/ x1234" defaultRegion:@"US" error:&aError]], nil);
+        STAssertTrue([usWithTwoExtensionsNumber isEqual:[phoneUtil parse:@"(212)123-1234 x508\\x1234" defaultRegion:@"US" error:&aError]], nil);
         
         // Test parsing numbers in the form (645) 123-1234-910# works, where the last
         // 3 digits before the # are an extension.
@@ -2498,9 +2514,9 @@
         [usWithExtension setCountryCode:1];
         [usWithExtension setNationalNumber:6451231234];
         [usWithExtension setExtension:@"910"];
-        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"+1 (645) 123 1234-910#" defaultRegion:@"US"]], nil);
+        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"+1 (645) 123 1234-910#" defaultRegion:@"US" error:&aError]], nil);
         // Retry with the same number in a slightly different format.
-        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"+1 (645) 123 1234 ext. 910#" defaultRegion:@"US"]], nil);
+        STAssertTrue([usWithExtension isEqual:[phoneUtil parse:@"+1 (645) 123 1234 ext. 910#" defaultRegion:@"US" error:&aError]], nil);
     }
     
         
@@ -2533,14 +2549,14 @@
         STAssertTrue([alphaNumericNumber isEqual:[phoneUtil parseAndKeepRawInput:@"001800 six-flag" defaultRegion:@"NZ" error:&aError]], nil);
         
         // Invalid region code supplied.
-        @try
         {
             [phoneUtil parseAndKeepRawInput:@"123 456 7890" defaultRegion:@"CS" error:&aError];
-            STFail(@"Deprecated region code not allowed: should fail.");
-        } @catch (NSException *e)
-        {
-            // Expected this exception.
-            STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            if (aError == nil)
+                STFail(@"Deprecated region code not allowed: should fail.");
+            else {
+                // Expected this exception.
+                STAssertEqualObjects(@"INVALID_COUNTRY_CODE", aError.domain, @"Wrong error type stored in exception.");
+            }
         }
         
         id koreanNumber = [[NBPhoneNumber alloc] init];
@@ -2589,9 +2605,10 @@
         // Test simple matches where formatting is different, or leading zeroes,
         // or country calling code has been specified.
         
-        NBPhoneNumber *num1 = [phoneUtil parse:@"+64 3 331 6005" defaultRegion:@"NZ"];
+        NSError *aError = nil;
         
-        NBPhoneNumber *num2 = [phoneUtil parse:@"+64 03 331 6005" defaultRegion:@"NZ"];
+        NBPhoneNumber *num1 = [phoneUtil parse:@"+64 3 331 6005" defaultRegion:@"NZ" error:&aError];
+        NBPhoneNumber *num2 = [phoneUtil parse:@"+64 03 331 6005" defaultRegion:@"NZ" error:&aError];
         STAssertEquals(NBEMatchTypeEXACT_MATCH, [phoneUtil isNumberMatch:num1 second:num2], nil);
         STAssertEquals(NBEMatchTypeEXACT_MATCH, [phoneUtil isNumberMatch:@"+64 3 331 6005" second:@"+64 03 331 6005"], nil);
         STAssertEquals(NBEMatchTypeEXACT_MATCH, [phoneUtil isNumberMatch:@"+800 1234 5678" second:@"+80012345678"], nil);
