@@ -452,8 +452,12 @@ static NSMutableDictionary *regexPatternCache;
 {
     NSDictionary *unarchiveData = nil;
     
-    @try {
+    @try {        
+#if TARGET_OS_IPHONE
         NSString *filePath = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
+#else
+        NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:@"plist"];
+#endif
         NSData *fileData = [NSData dataWithContentsOfFile:filePath];
         unarchiveData = [NSKeyedUnarchiver unarchiveObjectWithData:fileData];
     }

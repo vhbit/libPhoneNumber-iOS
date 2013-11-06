@@ -104,10 +104,13 @@
     }
 }
 
+#if !TARGET_OS_IPHONE
+// on OS X there is no way to get working carrier region
 - (void)testCarrierRegion
 {
     NSLog(@"testCarrierRegion %@", [self getPhoneNumberFormatted:@"1234567890"]);
 }
+#endif
 
 // FIXME: This unit test ALWAYS FAIL ... until google libPhoneNumber fix this issue
 - (void)testAustriaNationalNumberParsing
