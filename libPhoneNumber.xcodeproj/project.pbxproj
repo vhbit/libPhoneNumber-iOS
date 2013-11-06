@@ -161,21 +161,14 @@
 		C43CD1BC182A67BE0001DE24 /* libPhoneNumberOSX-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libPhoneNumberOSX-Info.plist"; sourceTree = "<group>"; };
 		C43CD1BE182A67BE0001DE24 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C43CD1C0182A67BE0001DE24 /* libPhoneNumberOSX-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "libPhoneNumberOSX-Prefix.pch"; sourceTree = "<group>"; };
-		C43CD1C1182A67BE0001DE24 /* libPhoneNumberOSX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libPhoneNumberOSX.h; sourceTree = "<group>"; };
-		C43CD1C2182A67BE0001DE24 /* libPhoneNumberOSX.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libPhoneNumberOSX.m; sourceTree = "<group>"; };
 		C43CD1C9182A67BE0001DE24 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		C43CD1D1182A67BE0001DE24 /* libPhoneNumberOSXTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libPhoneNumberOSXTests-Info.plist"; sourceTree = "<group>"; };
-		C43CD1D3182A67BE0001DE24 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		C43CD1D5182A67BE0001DE24 /* libPhoneNumberOSXTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libPhoneNumberOSXTests.m; sourceTree = "<group>"; };
 		C43CD1F6182A6D9E0001DE24 /* libPhoneNumberOSX Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "libPhoneNumberOSX Tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C43CD1FA182A6D9E0001DE24 /* libPhoneNumberOSX Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libPhoneNumberOSX Tests-Info.plist"; sourceTree = "<group>"; };
 		C43CD1FC182A6D9E0001DE24 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		C43CD1FE182A6D9E0001DE24 /* libPhoneNumberOSX_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libPhoneNumberOSX_Tests.m; sourceTree = "<group>"; };
 		C43CD200182A6D9E0001DE24 /* libPhoneNumberOSX Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "libPhoneNumberOSX Tests-Prefix.pch"; sourceTree = "<group>"; };
 		C43CD22A182A8B1C0001DE24 /* PhoneNumber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhoneNumber.h; sourceTree = "<group>"; };
 		C4936890182A59BA00264461 /* liblibPhoneNumberOSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibPhoneNumberOSX.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4936891182A5A0900264461 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		C49368AF182A5AE300264461 /* libPhoneNumberTests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "libPhoneNumberTests copy-Info.plist"; path = "/Users/vhbit/projects/external/libPhoneNumber-iOS/libPhoneNumberTests copy-Info.plist"; sourceTree = "<absolute>"; };
 		E1A8557117FE874700A4CDFF /* NSArray+NBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+NBAdditions.h"; sourceTree = "<group>"; };
 		E1A8557217FE874700A4CDFF /* NSArray+NBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+NBAdditions.m"; sourceTree = "<group>"; };
 		FD0BD7761679DDA600B19065 /* NBPhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumber.h; sourceTree = "<group>"; };
@@ -297,8 +290,6 @@
 		C43CD1BA182A67BE0001DE24 /* libPhoneNumberOSX */ = {
 			isa = PBXGroup;
 			children = (
-				C43CD1C1182A67BE0001DE24 /* libPhoneNumberOSX.h */,
-				C43CD1C2182A67BE0001DE24 /* libPhoneNumberOSX.m */,
 				C43CD1BB182A67BE0001DE24 /* Supporting Files */,
 			);
 			path = libPhoneNumberOSX;
@@ -314,28 +305,9 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		C43CD1CF182A67BE0001DE24 /* libPhoneNumberOSXTests */ = {
-			isa = PBXGroup;
-			children = (
-				C43CD1D5182A67BE0001DE24 /* libPhoneNumberOSXTests.m */,
-				C43CD1D0182A67BE0001DE24 /* Supporting Files */,
-			);
-			path = libPhoneNumberOSXTests;
-			sourceTree = "<group>";
-		};
-		C43CD1D0182A67BE0001DE24 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				C43CD1D1182A67BE0001DE24 /* libPhoneNumberOSXTests-Info.plist */,
-				C43CD1D2182A67BE0001DE24 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		C43CD1F8182A6D9E0001DE24 /* libPhoneNumberOSX Tests */ = {
 			isa = PBXGroup;
 			children = (
-				C43CD1FE182A6D9E0001DE24 /* libPhoneNumberOSX_Tests.m */,
 				C43CD1F9182A6D9E0001DE24 /* Supporting Files */,
 			);
 			path = "libPhoneNumberOSX Tests";
@@ -391,11 +363,9 @@
 				FD7A0644167715A1004BBEB6 /* libPhoneNumber UnitTest */,
 				FD9E3ADD169E5176007E06CC /* libPhoneNumberiOS */,
 				C43CD1BA182A67BE0001DE24 /* libPhoneNumberOSX */,
-				C43CD1CF182A67BE0001DE24 /* libPhoneNumberOSXTests */,
 				C43CD1F8182A6D9E0001DE24 /* libPhoneNumberOSX Tests */,
 				FD7A061F167715A0004BBEB6 /* Frameworks */,
 				FD7A061D167715A0004BBEB6 /* Products */,
-				C49368AF182A5AE300264461 /* libPhoneNumberTests copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -645,7 +615,7 @@
 				ORGANIZATIONNAME = NHN;
 				TargetAttributes = {
 					C43CD1F5182A6D9E0001DE24 = {
-						TestTargetID = C43CD1B2182A67BE0001DE24 /* PhoneNumber */;
+						TestTargetID = C43CD1B2182A67BE0001DE24;
 					};
 				};
 			};
@@ -837,14 +807,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				C43CD1BE182A67BE0001DE24 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		C43CD1D2182A67BE0001DE24 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C43CD1D3182A67BE0001DE24 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
