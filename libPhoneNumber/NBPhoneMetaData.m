@@ -44,19 +44,19 @@
 {
     if (data != nil && [data isKindOfClass:[NSArray class]] )
     {
-        /*  1 */ self.generalDesc = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:1]];
-        /*  2 */ self.fixedLine = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:2]];
-        /*  3 */ self.mobile = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:3]];
-        /*  4 */ self.tollFree = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:4]];
-        /*  5 */ self.premiumRate = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:5]];
-        /*  6 */ self.sharedCost = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:6]];
-        /*  7 */ self.personalNumber = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:7]];
-        /*  8 */ self.voip = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:8]];
-        /* 21 */ self.pager = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:21]];
-        /* 25 */ self.uan = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:25]];
-        /* 27 */ self.emergency = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:27]];
-        /* 28 */ self.voicemail = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:28]];
-        /* 24 */ self.noInternationalDialling = [[NBPhoneNumberDesc alloc] initWithData:[data safeObjectAtIndex:24]];
+        /*  1 */ self.generalDesc = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:1]];
+        /*  2 */ self.fixedLine = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:2]];
+        /*  3 */ self.mobile = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:3]];
+        /*  4 */ self.tollFree = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:4]];
+        /*  5 */ self.premiumRate = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:5]];
+        /*  6 */ self.sharedCost = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:6]];
+        /*  7 */ self.personalNumber = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:7]];
+        /*  8 */ self.voip = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:8]];
+        /* 21 */ self.pager = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:21]];
+        /* 25 */ self.uan = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:25]];
+        /* 27 */ self.emergency = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:27]];
+        /* 28 */ self.voicemail = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:28]];
+        /* 24 */ self.noInternationalDialling = [NBPhoneNumberDesc phoneNumberDescWithData:[data safeObjectAtIndex:24]];
         /*  9 */ self.codeID = [data safeObjectAtIndex:9];
         /* 10 */ self.countryCode = (UInt32)[[data safeObjectAtIndex:10] intValue];
         /* 11 */ self.internationalPrefix = [data safeObjectAtIndex:11];

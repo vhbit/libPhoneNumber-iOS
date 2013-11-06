@@ -74,11 +74,11 @@
     
 	phoneNumberCopy.countryCode = self.countryCode;
     phoneNumberCopy.nationalNumber = self.nationalNumber;
-    phoneNumberCopy.extension = [self.extension copy];
+    phoneNumberCopy.extension = [[self.extension copy] autorelease];
     phoneNumberCopy.italianLeadingZero = self.italianLeadingZero;
-    phoneNumberCopy.rawInput = [self.rawInput copy];
-    phoneNumberCopy.countryCodeSource = [self.countryCodeSource copy];
-    phoneNumberCopy.preferredDomesticCarrierCode = [self.preferredDomesticCarrierCode copy];
+    phoneNumberCopy.rawInput = [[self.rawInput copy] autorelease];
+    phoneNumberCopy.countryCodeSource = [[self.countryCodeSource copy] autorelease];
+    phoneNumberCopy.preferredDomesticCarrierCode = [[self.preferredDomesticCarrierCode copy] autorelease];
     
 	return phoneNumberCopy;
 }

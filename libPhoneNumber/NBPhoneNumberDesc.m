@@ -13,6 +13,11 @@
 @synthesize nationalNumberPattern, possibleNumberPattern, exampleNumber;
 
 
++ (instancetype)phoneNumberDescWithData:(id)data
+{
+    return [[[self alloc] initWithData:data] autorelease];
+}
+
 - (id)initWithData:(id)data
 {
     self = [self init];
@@ -69,9 +74,9 @@
 {
 	NBPhoneNumberDesc *phoneDescCopy = [[NBPhoneNumberDesc allocWithZone:zone] init];
     
-    phoneDescCopy.nationalNumberPattern = [self.nationalNumberPattern copy];
-    phoneDescCopy.possibleNumberPattern = [self.possibleNumberPattern copy];
-    phoneDescCopy.exampleNumber = [self.exampleNumber copy];
+    phoneDescCopy.nationalNumberPattern = [[self.nationalNumberPattern copy] autorelease];
+    phoneDescCopy.possibleNumberPattern = [[self.possibleNumberPattern copy] autorelease];
+    phoneDescCopy.exampleNumber = [[self.exampleNumber copy] autorelease];
     
 	return phoneDescCopy;
 }

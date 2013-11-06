@@ -2911,7 +2911,7 @@ static NSMutableDictionary *regexPatternCache;
     number = [NBPhoneNumberUtil normalizeNonBreakingSpace:number];
     
     /** @type {!goog.string.StringBuffer} */
-    NSString *strippedNumber = [number copy];
+    NSString *strippedNumber = [[number copy] autorelease];
     [self maybeStripExtension:&strippedNumber];
     
     return [self matchesEntirely:VALID_ALPHA_PHONE_PATTERN_STRING string:strippedNumber];
@@ -3146,7 +3146,7 @@ static NSMutableDictionary *regexPatternCache;
         return YES;
     }
     
-    NBPhoneNumber *numberCopy = [number copy];
+    NBPhoneNumber *numberCopy = [[number copy] autorelease];
     UInt64 nationalNumber = number.nationalNumber;
     do {
         nationalNumber = floor(nationalNumber / 10);

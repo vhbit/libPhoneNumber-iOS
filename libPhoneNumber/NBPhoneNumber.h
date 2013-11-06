@@ -13,11 +13,11 @@
 // from phonemetadata.pb.js
 /* 1 */ @property (nonatomic, assign, readwrite) UInt32 countryCode;
 /* 2 */ @property (nonatomic, assign, readwrite) UInt64 nationalNumber;
-/* 3 */ @property (nonatomic, strong, readwrite) NSString *extension;
+/* 3 */ @property (nonatomic, retain, readwrite) NSString *extension;
 /* 4 */ @property (nonatomic, assign, readwrite) BOOL italianLeadingZero;
-/* 5 */ @property (nonatomic, strong, readwrite) NSString *rawInput;
-/* 6 */ @property (nonatomic, strong, readwrite) NSNumber *countryCodeSource;
-/* 7 */ @property (nonatomic, strong, readwrite) NSString *preferredDomesticCarrierCode;
+/* 5 */ @property (nonatomic, retain, readwrite) NSString *rawInput;
+/* 6 */ @property (nonatomic, retain, readwrite) NSNumber *countryCodeSource;
+/* 7 */ @property (nonatomic, retain, readwrite) NSString *preferredDomesticCarrierCode;
 
 - (void)clearCountryCodeSource;
 - (NBECountryCodeSource)getCountryCodeSourceOrDefault;
