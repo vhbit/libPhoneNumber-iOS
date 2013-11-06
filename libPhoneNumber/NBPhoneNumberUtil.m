@@ -12,8 +12,10 @@
 #import "NBPhoneMetaData.h"
 #import "math.h"
 
+#if TARGET_OS_IPHONE
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
+#endif
 
 
 #pragma mark - Static Int variables -
@@ -3718,8 +3720,12 @@ static NSMutableDictionary *regexPatternCache;
 
 - (NSString *)countryCodeByCarrier
 {
+#if TARGET_OS_IPHONE
     CTTelephonyNetworkInfo *networkInfo = [[[CTTelephonyNetworkInfo alloc] init] autorelease];
     NSString *isoCode = [[networkInfo subscriberCellularProvider] isoCountryCode];
+#else
+    NSString *isoCode = nil;
+#endif
     
 	if (!isoCode) {
 		isoCode = UNKNOWN_REGION_;
