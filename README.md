@@ -1,4 +1,6 @@
-# libPhoneNumber for iOS (ARC)
+# libPhoneNumber for iOS/OS X (NON-ARC)
+
+Please note, that it is NON-ARC version, for ARC-enabled please check original repository
 
 * NBPhoneNumber, NBNumberFormat, NBPhoneNumberDesc, NBPhoneMetaData (Metadata classes) 
 
