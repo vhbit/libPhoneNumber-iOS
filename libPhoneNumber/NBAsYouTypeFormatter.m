@@ -16,20 +16,20 @@
 
 @interface NBAsYouTypeFormatter ()
 
-@property (nonatomic, strong, readwrite) NSString *DIGIT_PLACEHOLDER_;
+@property (nonatomic, retain, readwrite) NSString *DIGIT_PLACEHOLDER_;
 @property (nonatomic, assign, readwrite) NSString *SEPARATOR_BEFORE_NATIONAL_NUMBER_;
-@property (nonatomic, strong, readwrite) NSString *currentOutput_, *currentFormattingPattern_;
-@property (nonatomic, strong, readwrite) NSString *defaultCountry_;
-@property (nonatomic, strong, readwrite) NSString *nationalPrefixExtracted_;
-@property (nonatomic, strong, readwrite) NSMutableString *formattingTemplate_, *accruedInput_, *prefixBeforeNationalNumber_, *accruedInputWithoutFormatting_, *nationalNumber_;
-@property (nonatomic, strong, readwrite) NSRegularExpression *DIGIT_PATTERN_, *NATIONAL_PREFIX_SEPARATORS_PATTERN_, *CHARACTER_CLASS_PATTERN_, *STANDALONE_DIGIT_PATTERN_;
-@property (nonatomic, strong, readwrite) NSRegularExpression *ELIGIBLE_FORMAT_PATTERN_;
+@property (nonatomic, retain, readwrite) NSString *currentOutput_, *currentFormattingPattern_;
+@property (nonatomic, retain, readwrite) NSString *defaultCountry_;
+@property (nonatomic, retain, readwrite) NSString *nationalPrefixExtracted_;
+@property (nonatomic, retain, readwrite) NSMutableString *formattingTemplate_, *accruedInput_, *prefixBeforeNationalNumber_, *accruedInputWithoutFormatting_, *nationalNumber_;
+@property (nonatomic, retain, readwrite) NSRegularExpression *DIGIT_PATTERN_, *NATIONAL_PREFIX_SEPARATORS_PATTERN_, *CHARACTER_CLASS_PATTERN_, *STANDALONE_DIGIT_PATTERN_;
+@property (nonatomic, retain, readwrite) NSRegularExpression *ELIGIBLE_FORMAT_PATTERN_;
 @property (nonatomic, assign, readwrite) BOOL ableToFormat_, inputHasFormatting_, isCompleteNumber_, isExpectingCountryCallingCode_, shouldAddSpaceAfterNationalPrefix_;
-@property (nonatomic, strong, readwrite) NBPhoneNumberUtil *phoneUtil_;
+@property (nonatomic, retain, readwrite) NBPhoneNumberUtil *phoneUtil_;
 @property (nonatomic, assign, readwrite) int lastMatchPosition_, originalPosition_, positionToRemember_;
 @property (nonatomic, assign, readwrite) int MIN_LEADING_DIGITS_LENGTH_;
-@property (nonatomic, strong, readwrite) NSMutableArray *possibleFormats_;
-@property (nonatomic, strong, readwrite) NBPhoneMetaData *currentMetaData_, *defaultMetaData_, *EMPTY_METADATA_;
+@property (nonatomic, retain, readwrite) NSMutableArray *possibleFormats_;
+@property (nonatomic, retain, readwrite) NBPhoneMetaData *currentMetaData_, *defaultMetaData_, *EMPTY_METADATA_;
 
 @end
 
@@ -250,7 +250,7 @@
          * @type {Array.<i18n.phonenumbers.NumberFormat>}
          * @private
          */
-        self.possibleFormats_ = [[NSMutableArray alloc] init];
+        self.possibleFormats_ = [NSMutableArray array];
     }
     
     return self;
@@ -286,7 +286,7 @@
          * @type {i18n.phonenumbers.PhoneMetadata}
          * @private
          */
-        self.EMPTY_METADATA_ = [[NBPhoneMetaData alloc] init];
+        self.EMPTY_METADATA_ = [[[NBPhoneMetaData alloc] init] autorelease];
         [self.EMPTY_METADATA_ setInternationalPrefix:@"NA"];
     }
     
@@ -303,7 +303,7 @@
         self.defaultCountry_ = regionCode;
         self.currentMetaData_ = [self getMetadataForRegion_:self.defaultCountry_];
         self.defaultMetaData_ = self.currentMetaData_;
-        self.EMPTY_METADATA_ = [[NBPhoneMetaData alloc] init];
+        self.EMPTY_METADATA_ = [[[NBPhoneMetaData alloc] init] autorelease];
         [self.EMPTY_METADATA_ setInternationalPrefix:@"NA"];
     }
     
@@ -436,7 +436,7 @@
 - (void)narrowDownPossibleFormats_:(NSString *)leadingDigits
 {
     /** @type {Array.<i18n.phonenumbers.NumberFormat>} */
-    NSMutableArray *possibleFormats = [[NSMutableArray alloc] init];
+    NSMutableArray *possibleFormats = [NSMutableArray array];
     /** @type {number} */
     unsigned int indexOfLeadingDigitsPattern = (unsigned int)leadingDigits.length - self.MIN_LEADING_DIGITS_LENGTH_;
     /** @type {number} */
@@ -882,7 +882,7 @@
 - (NSString*)attemptToChooseFormattingPattern_
 {
     /** @type {string} */
-    NSString *nationalNumber = [self.nationalNumber_ copy];
+    NSString *nationalNumber = [[self.nationalNumber_ copy] autorelease];
     // We start to attempt to format only when as least MIN_LEADING_DIGITS_LENGTH
     // digits of national number (excluding national prefix) have been entered.
     if (nationalNumber.length >= self.MIN_LEADING_DIGITS_LENGTH_) {
@@ -904,7 +904,7 @@
 - (NSString*)inputAccruedNationalNumber_
 {
     /** @type {string} */
-    NSString *nationalNumber = [self.nationalNumber_ copy];
+    NSString *nationalNumber = [[self.nationalNumber_ copy] autorelease];
     /** @type {number} */
     unsigned int lengthOfNationalNumber = (unsigned int)nationalNumber.length;
     if (lengthOfNationalNumber > 0) {
@@ -937,7 +937,7 @@
     }
     
     /** @type {string} */
-    NSString *nationalNumber = [self.nationalNumber_ copy];
+    NSString *nationalNumber = [[self.nationalNumber_ copy] autorelease];
     return ([nationalNumber characterAtIndex:0] == '1') && ([nationalNumber characterAtIndex:1] != '0') &&
         ([nationalNumber characterAtIndex:1] != '1');
 };
@@ -952,7 +952,7 @@
 - (NSString*)removeNationalPrefixFromNationalNumber_
 {
     /** @type {string} */
-    NSString *nationalNumber = [self.nationalNumber_ copy];
+    NSString *nationalNumber = [[self.nationalNumber_ copy] autorelease];
     /** @type {number} */
     unsigned int startOfNationalNumber = 0;
     
@@ -996,7 +996,7 @@
 - (BOOL)attemptToExtractIdd_
 {
     /** @type {string} */
-    NSString *accruedInputWithoutFormatting = [self.accruedInputWithoutFormatting_ copy];
+    NSString *accruedInputWithoutFormatting = [[self.accruedInputWithoutFormatting_ copy] autorelease];
     /** @type {RegExp} */
     NSString *internationalPrefix = [NSString stringWithFormat:@"^(?:\\+|%@)", self.currentMetaData_.internationalPrefix];
     /** @type {Array.<string>} */
@@ -1111,7 +1111,7 @@
 - (NSString*)inputDigitHelper_:(NSString *)nextChar
 {
     /** @type {string} */
-    NSString *formattingTemplate = [self.formattingTemplate_ copy];
+    NSString *formattingTemplate = [[self.formattingTemplate_ copy] autorelease];
     NSString *subedString = @"";
     
     if (formattingTemplate.length > self.lastMatchPosition_) {

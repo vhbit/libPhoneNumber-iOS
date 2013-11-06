@@ -118,4 +118,9 @@
     return [NSString stringWithFormat:@" - countryCode[%u], nationalNumber[%llu], extension[%@], italianLeadingZero[%@], rawInput[%@] countryCodeSource[%d] preferredDomesticCarrierCode[%@]", (unsigned int)self.countryCode, self.nationalNumber, self.extension, self.italianLeadingZero?@"Y":@"N", self.rawInput, [self.countryCodeSource intValue], self.preferredDomesticCarrierCode];
 }
 
++ (instancetype)number
+{
+    return [[[self alloc] init] autorelease];
+}
+
 @end

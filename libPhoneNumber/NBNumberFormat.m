@@ -38,7 +38,7 @@
     if (self)
     {
         self.nationalPrefixOptionalWhenFormatting = NO;
-        self.leadingDigitsPatterns = [[NSMutableArray alloc] init];
+        self.leadingDigitsPatterns = [NSMutableArray array];
     }
     
     return self;
@@ -47,7 +47,7 @@
 
 - (NSMutableArray*)stringArrayFromData:(id)data
 {
-    NSMutableArray *resArray = [[NSMutableArray alloc] init];
+    NSMutableArray *resArray = [NSMutableArray array];
     if (data != nil && [data isKindOfClass:[NSArray class]])
     {
         for (id numFormat in data)
@@ -87,12 +87,12 @@
      5 @property (nonatomic, strong, readwrite) NSString *domesticCarrierCodeFormattingRule;
     */
     
-    phoneFormatCopy.pattern = [self.pattern copy];
-    phoneFormatCopy.format = [self.format copy];
-    phoneFormatCopy.leadingDigitsPatterns = [self.leadingDigitsPatterns copy];
-    phoneFormatCopy.nationalPrefixFormattingRule = [self.nationalPrefixFormattingRule copy];
+    phoneFormatCopy.pattern = [[self.pattern copy] autorelease];
+    phoneFormatCopy.format = [[self.format copy] autorelease];
+    phoneFormatCopy.leadingDigitsPatterns = [[self.leadingDigitsPatterns copy] autorelease];
+    phoneFormatCopy.nationalPrefixFormattingRule = [[self.nationalPrefixFormattingRule copy] autorelease];
     phoneFormatCopy.nationalPrefixOptionalWhenFormatting = self.nationalPrefixOptionalWhenFormatting;
-    phoneFormatCopy.domesticCarrierCodeFormattingRule = [self.domesticCarrierCodeFormattingRule copy];
+    phoneFormatCopy.domesticCarrierCodeFormattingRule = [[self.domesticCarrierCodeFormattingRule copy] autorelease];
     
 	return phoneFormatCopy;
 }
@@ -134,6 +134,16 @@
     {
         
     }
+}
+
+- (void)dealloc
+{
+    [pattern release];
+    [format release];
+    [leadingDigitsPatterns release];
+    [nationalPrefixFormattingRule release];
+    [domesticCarrierCodeFormattingRule release];
+    [super dealloc];
 }
 
 @end

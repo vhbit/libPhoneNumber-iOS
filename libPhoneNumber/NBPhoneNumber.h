@@ -22,4 +22,6 @@
 - (void)clearCountryCodeSource;
 - (NBECountryCodeSource)getCountryCodeSourceOrDefault;
 
++ (instancetype)number;
+
 @end

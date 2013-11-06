@@ -30,7 +30,7 @@
     //testInvalidRegion()
     {
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"ZZ"];
+        NBAsYouTypeFormatter *f = [[[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"ZZ"] autorelease];
         STAssertEqualObjects(@"+", [f inputDigit:@"+"], nil);
         STAssertEqualObjects(@"+4", [f inputDigit:@"4"], nil);
         STAssertEqualObjects(@"+48 ", [f inputDigit:@"8"], nil);
@@ -54,7 +54,7 @@
     //testInvalidPlusSign()
     {
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"ZZ"];
+        NBAsYouTypeFormatter *f = [[[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"ZZ"] autorelease];
         STAssertEqualObjects(@"+", [f inputDigit:@"+"], nil);
         STAssertEqualObjects(@"+4", [f inputDigit:@"4"], nil);
         STAssertEqualObjects(@"+48 ", [f inputDigit:@"8"], nil);
@@ -76,7 +76,7 @@
         // The bug occurred last time for countries which have two formatting rules
         // with exactly the same leading digits pattern but differ in length.
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"ZZ"];
+        NBAsYouTypeFormatter *f = [[[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"ZZ"] autorelease];
         STAssertEqualObjects(@"+", [f inputDigit:@"+"], nil);
         STAssertEqualObjects(@"+8", [f inputDigit:@"8"], nil);
         STAssertEqualObjects(@"+81 ", [f inputDigit:@"1"], nil);
@@ -98,7 +98,7 @@
     // testCountryWithSpaceInNationalPrefixFormattingRule()
     {
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"BY"];
+        NBAsYouTypeFormatter *f = [[[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"BY"] autorelease];
         STAssertEqualObjects(@"8", [f inputDigit:@"8"], nil);
         STAssertEqualObjects(@"88", [f inputDigit:@"8"], nil);
         STAssertEqualObjects(@"881", [f inputDigit:@"1"], nil);
@@ -115,7 +115,7 @@
     // testCountryWithSpaceInNationalPrefixFormattingRuleAndLongNdd()
     {
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"BY"];
+        NBAsYouTypeFormatter *f = [[[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"BY"] autorelease];
         STAssertEqualObjects(@"9", [f inputDigit:@"9"], nil);
         STAssertEqualObjects(@"99", [f inputDigit:@"9"], nil);
         STAssertEqualObjects(@"999", [f inputDigit:@"9"], nil);
@@ -131,7 +131,7 @@
     // testAYTFUS()
     {
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"US"];
+        NBAsYouTypeFormatter *f = [[[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"US"] autorelease];
         STAssertEqualObjects(@"6", [f inputDigit:@"6"], nil);
         STAssertEqualObjects(@"65", [f inputDigit:@"5"], nil);
         STAssertEqualObjects(@"650", [f inputDigit:@"0"], nil);
@@ -227,7 +227,7 @@
     //testAYTFUSFullWidthCharacters()
     {
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"US"];
+        NBAsYouTypeFormatter *f = [[[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"US"] autorelease];
         STAssertEqualObjects(@"\uFF16", [f inputDigit:@"\uFF16"], nil);
         STAssertEqualObjects(@"\uFF16\uFF15", [f inputDigit:@"\uFF15"], nil);
         STAssertEqualObjects(@"650", [f inputDigit:@"\uFF10"], nil);
@@ -243,7 +243,7 @@
     // testAYTFUSMobileShortCode()
     {
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"US"];
+        NBAsYouTypeFormatter *f = [[[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"US"] autorelease];
         STAssertEqualObjects(@"*", [f inputDigit:@"*"], nil);
         STAssertEqualObjects(@"*1", [f inputDigit:@"1"], nil);
         STAssertEqualObjects(@"*12", [f inputDigit:@"2"], nil);
@@ -254,7 +254,7 @@
     // testAYTFUSVanityNumber()
     {
         /** @type {i18n.phonenumbers.AsYouTypeFormatter} */
-        NBAsYouTypeFormatter *f = [[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"US"];
+        NBAsYouTypeFormatter *f = [[[NBAsYouTypeFormatter alloc] initWithRegionCodeForTest:@"US"] autorelease];
         STAssertEqualObjects(@"8", [f inputDigit:@"8"], nil);
         STAssertEqualObjects(@"80", [f inputDigit:@"0"], nil);
         STAssertEqualObjects(@"800", [f inputDigit:@"0"], nil);

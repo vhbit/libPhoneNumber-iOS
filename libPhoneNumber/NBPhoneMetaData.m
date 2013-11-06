@@ -22,8 +22,8 @@
     
     if (self)
     {
-        [self setNumberFormats:[[NSMutableArray alloc] init]];
-        [self setIntlNumberFormats:[[NSMutableArray alloc] init]];
+        [self setNumberFormats:[NSMutableArray array]];
+        [self setIntlNumberFormats:[NSMutableArray array]];
 
         self.leadingZeroPossible = NO;
         self.mainCountryForCode = NO;
@@ -149,17 +149,35 @@
 
 - (NSMutableArray*)numberFormatArrayFromData:(id)data
 {
-    NSMutableArray *resArray = [[NSMutableArray alloc] init];
+    NSMutableArray *resArray = [NSMutableArray array];
     if (data != nil && [data isKindOfClass:[NSArray class]])
     {
         for (id numFormat in data)
         {
-            NBNumberFormat *newNumberFormat = [[NBNumberFormat alloc] initWithData:numFormat];
+            NBNumberFormat *newNumberFormat = [[[NBNumberFormat alloc] initWithData:numFormat] autorelease];
             [resArray addObject:newNumberFormat];
         }
     }
     
     return resArray;
+}
+
+- (void)dealloc
+{
+    [generalDesc release];
+    [fixedLine release];
+    [mobile release];
+    [tollFree release];
+    [premiumRate release];
+    [sharedCost release];
+    [personalNumber release];
+    [voip release];
+    [pager release];
+    [uan release];
+    [emergency release];
+    [voicemail release];
+    [noInternationalDialling release];
+    [super dealloc];
 }
 
 
