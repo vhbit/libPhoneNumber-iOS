@@ -173,7 +173,10 @@ static NSMutableDictionary *regexPatternCache;
     NSRegularExpression *regex = [regexPatternCache objectForKey:pattern];
     if (!regex) {
         regex = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:error];
-        [regexPatternCache setObject:regex forKey:pattern];
+        if (pattern && regex)
+            [regexPatternCache setObject:regex forKey:pattern];
+        else
+            NSLog(@"Failed to compile regexp pattern: %@", pattern);
     }
 
     return regex;
@@ -417,11 +420,9 @@ static NSMutableDictionary *regexPatternCache;
     {
         [self initRegularExpressionSet];
         [self initNormalizationMappings];
-        
         NSDictionary *resData = [self loadMetadata:@"NBPhoneNumberMetadata"];
         _coreMetaData = [[resData objectForKey:@"countryToMetadata"] retain];
         _mapCN2CCode = [[resData objectForKey:@"countryCodeToRegionCodeMap"] retain];
-        
         [self initCC2CN];
     }
     
@@ -564,7 +565,8 @@ static NSMutableDictionary *regexPatternCache;
 {
     [self clearCC2CN];
     [self clearCN2CC];
-    
+
+    [_coreMetaData release];
     [super dealloc];
 }
 
